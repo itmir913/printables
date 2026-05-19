@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한눈에 정리하는 학생부종합전형 설계도</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+          rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {extend: {fontFamily: {sans: ['Noto Sans KR', 'sans-serif']}}}
+        }
+    </script>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #c8c8c8;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* ── 페이지 공통 ── */
+        .page {
+            width: 257mm;
+            min-height: 364mm;
+            background: white;
+            margin: 8mm auto;
+            padding: 8mm;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        @page {
+            size: B4 portrait;
+            margin: 8mm;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .page {
+                width: 100%;
+                min-height: 100vh;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+                page-break-after: always;
+                break-after: page;
+            }
+
+            .page:last-child {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        /* ── 테이블 ── */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #555;
+            padding: 1.5mm 2mm;
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #e8f0fb;
+            font-weight: 600;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        td {
+            vertical-align: top;
+        }
+
+        /* ── 섹션 제목 ── */
+        .sh {
+            background: #1e3a5f;
+            color: white;
+            font-size: 12.5px;
+            font-weight: 700;
+            padding: 2mm 3mm;
+            margin-bottom: 1.5mm;
+            margin-top: 2.5mm;
+        }
+
+        .sh:first-child {
+            margin-top: 0;
+        }
+
+        /* ── 쓰기 줄 ── */
+        .wl {
+            display: inline-block;
+            border-bottom: 1px solid #777;
+            min-height: 18px;
+            vertical-align: bottom;
+        }
+
+        .wl-block {
+            display: block;
+            border-bottom: 1px solid #777;
+            min-height: 35px;
+            margin-bottom: 1.5mm;
+        }
+
+        /* ── 체크박스 ── */
+        label {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 12px;
+            margin-bottom: 2mm;
+            cursor: pointer;
+        }
+
+        label input[type=checkbox] {
+            flex-shrink: 0;
+            width: 13px;
+            height: 13px;
+        }
+
+        .label-block {
+            display: flex;
+        }
+
+        /* ── STEP 박스 ── */
+        .step {
+            border-left: 3px solid #1e3a5f;
+            padding: 1.5mm 2.5mm;
+            margin-bottom: 1.5mm;
+            font-size: 12px;
+            background: #f7faff;
+            line-height: 1.4;
+        }
+
+        .step-num {
+            font-weight: 700;
+            color: #1e3a5f;
+        }
+
+        .step.green {
+            background: #f0faf0;
+            border-left-color: #2e7d32;
+        }
+
+        .step.green .step-num {
+            color: #2e7d32;
+        }
+
+        .step.amber {
+            background: #fffbf0;
+            border-left-color: #d97706;
+        }
+
+        .step.amber .step-num {
+            color: #d97706;
+        }
+
+        /* ── 스토리 박스 ── */
+        .story-box {
+            border: 1px solid #555;
+            padding: 2mm;
+            margin-bottom: 2.5mm;
+        }
+
+        .story-head {
+            display: flex;
+            align-items: center;
+            gap: 3mm;
+            margin-bottom: 2mm;
+            font-size: 12.5px;
+            flex-wrap: wrap;
+        }
+
+        /* ── QR 플레이스홀더 ── */
+        .qr {
+            border: 1.5px dashed #888;
+            width: 22mm;
+            height: 22mm;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #888;
+            text-align: center;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        /* ── 안내 배너 ── */
+        .banner {
+            background: #1e3a5f;
+            color: white;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 2mm;
+            margin-bottom: 2mm;
+        }
+
+        /* ── 기타 ── */
+        .callout {
+            background: #fff8e1;
+            border-left: 3px solid #f59e0b;
+            padding: 1.5mm 2.5mm;
+            font-size: 11px;
+            margin: 1.5mm 0;
+        }
+
+        .footnote {
+            font-size: 11px;
+            color: #555;
+            margin: 1mm 0;
+        }
+
+        .ex-box {
+            border: 1.5px solid #1e3a5f;
+            background: #f0f6ff;
+            padding: 2mm 3mm;
+        }
+
+        .pg-footer {
+            margin-top: auto;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5mm;
+            text-align: center;
+            font-size: 11px;
+            color: #777;
+        }
+
+        .info-bar {
+            background: #f0f4f8;
+            padding: 2mm 3mm;
+            display: flex;
+            align-items: center;
+            gap: 5mm;
+            font-size: 12.5px;
+            margin-bottom: 2mm;
+            flex-wrap: wrap;
+        }
+
+        .page-title-bar {
+            background: #1e3a5f;
+            color: white;
+            padding: 2.5mm 4mm;
+            margin-bottom: 2mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 인쇄 버튼 */
+        .print-btn {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            background: #1e3a5f;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: inherit;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+        }
+
+        .print-btn:hover {
+            background: #2d5282;
+        }
+    </style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">🖨 인쇄</button>
+
+<!-- ════════════════════════════════════════
+     1면 — 학종 준비 점검 + 안내
+     ════════════════════════════════════════ -->
+<div class="page" id="p1">
+
+    <!-- 타이틀 -->
+    <div style="background:#1e3a5f;color:white;padding:3mm 4mm;margin-bottom:2mm;">
+        <div style="font-size:18px;font-weight:700;letter-spacing:0.02em;">한눈에 정리하는 학생부종합전형 설계도</div>
+        <div style="font-size:11.5px;margin-top:1mm;opacity:0.88;">내 손으로 설계하는 학생부 시나리오, 나만의 탁월한 역량으로 합격을 디자인하라</div>
+    </div>
+
+    <!-- 학생 정보 -->
+    <div class="info-bar" style="margin-bottom:2.5mm;">
+        <span>학번: <span class="wl" style="width:38mm;"></span></span>
+        <span>이름: <span class="wl" style="width:48mm;"></span></span>
+        <span style="flex:1;">희망 학과·계열: <span class="wl" style="width:100mm;"></span></span>
+    </div>
+
+    <!-- 2단 레이아웃 -->
+    <div style="display:flex;gap:4mm;flex:1;">
+
+        <!-- 왼쪽 65% -->
+        <div style="flex:65;min-width:0;">
+
+            <!-- ① 3대 평가 역량 -->
+            <div class="sh" style="margin-top:0;">① 학종 3대 평가 역량</div>
+            <table>
+                <tr>
+                    <th style="width:22%;">역량</th>
+                    <th style="width:44%;">세부 평가 요소</th>
+                    <th style="width:34%;">주요 반영 항목</th>
+                </tr>
+                <tr style="height:12mm;">
+                    <td><label class="label-block" style="margin:0;"><input type="checkbox">
+                        <strong>학업역량</strong></label></td>
+                    <td style="font-size:11.5px;">성취도 + 탐구 깊이 + 자기주도 학습</td>
+                    <td style="font-size:11.5px;">교과 세특</td>
+                </tr>
+                <tr style="height:12mm;">
+                    <td><label class="label-block" style="margin:0;"><input type="checkbox">
+                        <strong>진로역량</strong></label></td>
+                    <td style="font-size:11.5px;">전공 관련 탐구의 심화·연계성</td>
+                    <td style="font-size:11.5px;">세특·정규동아리·진로활동</td>
+                </tr>
+                <tr style="height:12mm;">
+                    <td><label class="label-block" style="margin:0;"><input type="checkbox">
+                        <strong>공동체역량</strong></label></td>
+                    <td style="font-size:11.5px;">협업·소통·리더십·성실성</td>
+                    <td style="font-size:11.5px;">자율활동·동아리·행동특성및종합의견</td>
+                </tr>
+            </table>
+
+            <!-- ② 반영 항목 -->
+            <div class="sh">② 대입 반영 항목 확인</div>
+            <table>
+                <tr>
+                    <th style="width:50%;">✅ 반영 항목</th>
+                    <th style="width:50%;">❌ 미반영 항목</th>
+                </tr>
+                <tr>
+                    <td style="font-size:11.5px;line-height:1.7;">
+                        ▸ 교과학습발달상황 (성적 + 세특)<br>
+                        ▸ 창체: 자율활동<br>
+                        ▸ 창체: 정규동아리<br>
+                        ▸ 창체: 진로활동<br>
+                        ▸ 행동특성및종합의견 <span style="color:#1e3a5f;font-weight:600;">(담임 종합 평가)</span>
+                    </td>
+                    <td style="font-size:11.5px;line-height:1.7;">
+                        ▸ 수상경력<br>
+                        ▸ 독서활동<br>
+                        ▸ 개인봉사활동<br>
+                        ▸ 자율동아리<br>
+                        ▸ 영재교육원 이수 실적
+                    </td>
+                </tr>
+            </table>
+            <div class="callout">★ 자소서는 2024학년도부터 완전 폐지. 세특이 자소서 역할을 대체합니다.</div>
+
+            <!-- ③ 이수권장과목 -->
+            <div class="sh">③ 이수권장과목 점검</div>
+            <div class="footnote" style="margin-bottom:1mm;">대학·학과별 이수권장과목이 다릅니다. 희망 대학 모집요강을 반드시 확인하세요.</div>
+            <table>
+                <tr>
+                    <th style="width:36%;">과목명</th>
+                    <th style="width:26%;">이수 여부</th>
+                    <th style="width:20%;">관련 역량</th>
+                    <th style="width:18%;">비고</th>
+                </tr>
+                <tr style="height:12mm;">
+                    <td></td>
+                    <td style="text-align:center;"><label style="margin:0;justify-content:center;"><input
+                            type="checkbox">이수</label> <label style="margin:0;"><input type="checkbox">미이수</label></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="height:12mm;">
+                    <td></td>
+                    <td style="text-align:center;"><label style="margin:0;justify-content:center;"><input
+                            type="checkbox">이수</label> <label style="margin:0;"><input type="checkbox">미이수</label></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="height:12mm;">
+                    <td></td>
+                    <td style="text-align:center;"><label style="margin:0;justify-content:center;"><input
+                            type="checkbox">이수</label> <label style="margin:0;"><input type="checkbox">미이수</label></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="height:12mm;">
+                    <td></td>
+                    <td style="text-align:center;"><label style="margin:0;justify-content:center;"><input
+                            type="checkbox">이수</label> <label style="margin:0;"><input type="checkbox">미이수</label></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="height:12mm;">
+                    <td></td>
+                    <td style="text-align:center;"><label style="margin:0;justify-content:center;"><input
+                            type="checkbox">이수</label> <label style="margin:0;"><input type="checkbox">미이수</label></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+
+        </div><!-- /left -->
+
+        <!-- 오른쪽 35% -->
+        <div style="flex:35;min-width:0;display:flex;flex-direction:column;">
+
+            <!-- ④ 체크리스트 -->
+            <div class="sh" style="margin-top:0;">④ 시작 전 체크리스트</div>
+            <label class="label-block"><input type="checkbox"> 1·2학년 생기부 열어두었다</label>
+            <label class="label-block"><input type="checkbox"> 희망 학과 1개로 좁혔다 (자율전공 가능)</label>
+            <label class="label-block"><input type="checkbox"> 이수권장과목 정리했다</label>
+            <label class="label-block"><input type="checkbox"> 선배 사례집 또는 QR 준비했다</label>
+
+            <!-- ⑤ 사용 절차 -->
+            <div class="sh">⑤ 사용 절차</div>
+            <div class="step"><span class="step-num">STEP 1</span> · 2면 → 내 생기부 정리 및 핵심 스토리 뽑기</div>
+            <div class="step"><span class="step-num">STEP 2</span> · 3면 → 선배 사례 최대한 많이 찾아 정리</div>
+            <div class="step green"><span class="step-num">STEP 3</span> · <strong>2면+3면</strong> 나란히 펼쳐 비교</div>
+            <div class="step"><span class="step-num">STEP 4</span> · 4면 → 3학년 활동 계획 및 스토리 설계</div>
+            <div class="step green"><span class="step-num">STEP 5</span> · <strong>2면+4면</strong> 나란히 펼쳐 흐름 점검</div>
+            <div class="step amber"><span class="step-num">STEP 6</span> · 4면 하단 한 문장 완성</div>
+
+            <!-- ⑥ 예시 문장 -->
+            <div class="sh">⑥ "나는 ___ 학생이다" 예시</div>
+            <div class="ex-box" style="font-size:11px;line-height:1.75;">
+                ① 나는 <b>생물 탐구를 통해 의생명과학</b>의 길을 준비하는 학생이다.<br>
+                ② 나는 <b>수학 개념을 사회 문제에 연결</b>해 탐구하는 학생이다.<br>
+                ③ 나는 <b>팀 프로젝트에서 갈등을 조율</b>하며 성장한 학생이다.<br>
+                ④ 나는 <b>환경 문제에 3년간 꾸준히 탐구</b>해온 학생이다.<br>
+                ⑤ 나는 <b>문학과 사회학을 넘나드는 융합적 사고</b>를 가진 학생이다.
+            </div>
+
+            <!-- ⑦ QR 코드 -->
+            <div class="sh">⑦ QR 코드</div>
+            <div style="display:flex;gap:3mm;justify-content:space-around;">
+                <div style="text-align:center;">
+                    <div class="qr">QR</div>
+                    <div style="font-size:10px;margin-top:1mm;">선배 생기부<br>검색</div>
+                </div>
+                <div style="text-align:center;">
+                    <div class="qr">QR</div>
+                    <div style="font-size:10px;margin-top:1mm;">탐구 주제<br>참고</div>
+                </div>
+                <div style="text-align:center;">
+                    <div class="qr">QR</div>
+                    <div style="font-size:10px;margin-top:1mm;">이수권장과목<br>모집요강</div>
+                </div>
+            </div>
+
+        </div><!-- /right -->
+    </div><!-- /2단 -->
+
+    <div class="pg-footer">1 / 4 &nbsp;|&nbsp; 학종을 여행하는 히치하이커를 위한 안내서</div>
+</div><!-- /p1 -->
+
+
+<!-- ════════════════════════════════════════
+     2면 — 나의 과거 생기부에서 스토리 추출하기
+     ════════════════════════════════════════ -->
+<div class="page" id="p2">
+
+    <div class="page-title-bar">
+        <div style="font-size:15px;font-weight:700;">2면 — 나의 과거 생기부에서 스토리 추출하기</div>
+        <div style="font-size:11px;background:rgba(255,255,255,0.18);padding:1mm 2.5mm;border-radius:2px;">
+            2면 + 3면 나란히 배치하여 = 선배와 나의 학생부 비교하기 &nbsp;|&nbsp; 2면 + 4면 나란히 배치하여 = 3학년 생기부 완성하기
+        </div>
+    </div>
+
+    <!-- 희망 학과 -->
+    <div class="info-bar">
+        <strong>희망 학과</strong>
+        <label style="margin:0;"><input type="checkbox">&nbsp;학과명:
+            <span class="wl" style="width:75mm;"></span></label>
+        <label style="margin:0;"><input type="checkbox">&nbsp;자율전공학과</label>
+    </div>
+
+    <!-- ① 활동 개요 -->
+    <div class="sh" style="margin-top:0;">① 활동 개요 (1·2학년 기준, 최대 5개 — 키워드 중심)</div>
+    <table>
+        <tr>
+            <th style="width:13%;">구분</th>
+            <th style="width:27%;">활동명 / 교과</th>
+            <th style="width:37%;">탐구 주제·키워드</th>
+            <th style="width:23%;">드러난 역량</th>
+        </tr>
+        <tr style="height:14mm;">
+            <td style="color:#666;">동아리활동</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:14mm;">
+            <td style="color:#666;">자율활동</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:14mm;">
+            <td style="color:#666;">진로활동</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:14mm;">
+            <td style="color:#666;">교과세특</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:14mm;">
+            <td style="color:#666;">교과세특</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <div class="footnote">* 서울대 등 면접전형 대학은 세특에 기록된 탐구 내용을 직접 질문합니다.</div>
+
+    <!-- ② 핵심 활동 스토리 -->
+    <div class="sh">② 핵심 활동 스토리 (1~2개 선택)</div>
+
+    <div style="display:flex;gap:3mm;flex:1;">
+
+        <!-- 스토리 1 -->
+        <div class="story-box" style="flex:1;min-width:0;margin-bottom:0;">
+            <div class="story-head" style="flex-wrap:wrap;gap:2mm;">
+                <strong style="white-space:nowrap;">활동명/교과:</strong>
+                <span class="wl" style="flex:1;min-width:20mm;"></span>
+                <div style="display:flex;flex-wrap:wrap;gap:2mm;font-size:11px;">
+                    <span style="white-space:nowrap;">연결 역량:</span>
+                    <label style="margin:0;font-size:11px;"><input type="checkbox">&nbsp;학업역량</label>
+                    <label style="margin:0;font-size:11px;"><input type="checkbox">&nbsp;진로역량</label>
+                    <label style="margin:0;font-size:11px;"><input type="checkbox">&nbsp;공동체역량</label>
+                </div>
+            </div>
+            <table style="font-size:11px;">
+                <tr>
+                    <th style="width:22%;background:#e8f0fb;vertical-align:middle;">① 동기<br><span
+                            style="font-weight:400;font-size:10px;">(왜 이 활동을 하게 되었는가? 어떤 궁금증이나 문제의식에서 시작했는가?)</span>
+                    </th>
+                    <td style="height:44mm;"></td>
+                </tr>
+                <tr>
+                    <th style="background:#e8f0fb;vertical-align:middle;">② 과정<br><span
+                            style="font-weight:400;font-size:10px;">(활동 과정에서 내가 주도적으로 한 역할은 무엇인가?<br>어떤 방법으로 탐구하거나 문제를 해결했는가?)</span>
+                    </th>
+                    <td style="height:55mm;"></td>
+                </tr>
+                <tr>
+                    <th style="background:#e8f0fb;vertical-align:middle;">③ 난관과 해결<br><span
+                            style="font-weight:400;font-size:10px;">(가장 어려웠던 점이나 실패했던 부분은 무엇인가?<br>이를 해결하거나 극복하기 위해 어떤 노력을 했는가?)</span>
+                    </th>
+                    <td style="height:44mm;"></td>
+                </tr>
+                <tr>
+                    <th style="background:#e8f0fb;vertical-align:middle;">④ 성장<br><span
+                            style="font-weight:400;font-size:10px;">(이 활동을 통해 배우고 성장한 점은 무엇인가?<br>이 경험이 현재의 진로·학과 관심과 어떻게 이어지는가?)</span>
+                    </th>
+                    <td style="height:55mm;"></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 스토리 2 -->
+        <div class="story-box" style="flex:1;min-width:0;margin-bottom:0;">
+            <div class="story-head" style="flex-wrap:wrap;gap:2mm;">
+                <strong style="white-space:nowrap;">활동명/교과:</strong>
+                <span class="wl" style="flex:1;min-width:20mm;"></span>
+                <div style="display:flex;flex-wrap:wrap;gap:2mm;font-size:11px;">
+                    <span style="white-space:nowrap;">연결 역량:</span>
+                    <label style="margin:0;font-size:11px;"><input type="checkbox">&nbsp;학업역량</label>
+                    <label style="margin:0;font-size:11px;"><input type="checkbox">&nbsp;진로역량</label>
+                    <label style="margin:0;font-size:11px;"><input type="checkbox">&nbsp;공동체역량</label>
+                </div>
+            </div>
+            <table style="font-size:11px;">
+                <tr>
+                    <th style="width:22%;background:#e8f0fb;vertical-align:middle;">① 동기<br><span
+                            style="font-weight:400;font-size:10px">(왜 이 활동을 하게 되었는가? 어떤 궁금증이나 문제의식에서 시작했는가?)</span></th>
+                    <td style="height:44mm;"></td>
+                </tr>
+                <tr>
+                    <th style="background:#e8f0fb;vertical-align:middle;">② 과정<br><span
+                            style="font-weight:400;font-size:10px;">(활동 과정에서 내가 주도적으로 한 역할은 무엇인가?<br>어떤 방법으로 탐구하거나 문제를 해결했는가?)</span></th>
+                    <td style="height:55mm;"></td>
+                </tr>
+                <tr>
+                    <th style="background:#e8f0fb;vertical-align:middle;">③ 난관과 해결<br><span
+                            style="font-weight:400;font-size:10px;">(가장 어려웠던 점이나 실패했던 부분은 무엇인가?<br>이를 해결하거나 극복하기 위해 어떤 노력을 했는가?)</span></th>
+                    <td style="height:44mm;"></td>
+                </tr>
+                <tr>
+                    <th style="background:#e8f0fb;vertical-align:middle;">④ 성장<br><span
+                            style="font-weight:400;font-size:10px;">(이 활동을 통해 배우고 성장한 점은 무엇인가?<br>이 경험이 현재의 진로·학과 관심과 어떻게 이어지는가?)</span></th>
+                    <td style="height:55mm;"></td>
+                </tr>
+            </table>
+        </div>
+
+    </div><!-- /2열 스토리 -->
+
+    <div class="pg-footer">2 / 4 &nbsp;|&nbsp; 학종을 여행하는 히치하이커를 위한 안내서</div>
+</div><!-- /p2 -->
+
+
+<!-- ════════════════════════════════════════
+     3면 — 목표 학과 선배들의 생기부 키워드 및 활동 사례 벤치마킹하기
+     ════════════════════════════════════════ -->
+<div class="page" id="p3">
+
+    <div class="banner">← 왼쪽에 2면을 두고 오른쪽에 3면을 나란히 펼쳐 비교하세요</div>
+
+    <div class="page-title-bar" style="margin-bottom:2mm;">
+        <div style="font-size:15px;font-weight:700;">3면 — 목표 학과 선배들의 생기부 키워드 및 활동 사례 벤치마킹하기</div>
+    </div>
+
+    <!-- 선배 정보 -->
+    <div class="info-bar">
+        <strong>선배 정보</strong>
+        <span>학과: <span class="wl" style="width:75mm;"></span></span>
+        <span>출처:
+      <label style="margin:0 2mm 0 2mm;display:inline-flex;"><input type="checkbox">&nbsp;사례집</label>
+      <label style="margin:0 2mm 0 0;display:inline-flex;"><input type="checkbox">&nbsp;QR</label>
+      <label style="margin:0;display:inline-flex;"><input type="checkbox">&nbsp;기타</label>
+    </span>
+    </div>
+
+    <!-- 활동 목록 -->
+    <div class="sh" style="margin-top:0;">선배의 활동 목록 (최대한 많이 적기)</div>
+    <table>
+        <tr>
+            <th style="width:13%;">구분</th>
+            <th style="width:32%;">활동명 / 교과</th>
+            <th style="width:55%;">탐구 주제·키워드·드러난 역량</th>
+        </tr>
+        <tr style="height:16mm;">
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:16mm;">
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:16mm;">
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:16mm;">
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:16mm;">
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:16mm;">
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:16mm;">
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:16mm;">
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <!-- 역량 체크 -->
+    <div class="sh">위 활동 사례에서 드러난 핵심역량 체크</div>
+    <div style="display:flex;gap:2mm;flex-wrap:wrap;font-size:11.5px;padding:2mm 3mm;background:#f8f8f8;border:1px solid #ccc;align-items:center;">
+        <div style="display:flex;align-items:center;gap:2mm;flex-wrap:wrap;">
+            <strong style="color:#1e3a5f;">[학업역량]</strong>
+            <label style="margin:0;"><input type="checkbox">학업역량</label>
+            <label style="margin:0;"><input type="checkbox">탐구력</label>
+            <label style="margin:0;"><input type="checkbox">자기주도 학습</label>
+        </div>
+        <div style="display:flex;align-items:center;gap:2mm;flex-wrap:wrap;">
+            <strong style="color:#1e3a5f;">[진로역량]</strong>
+            <label style="margin:0;"><input type="checkbox">진로역량</label>
+            <label style="margin:0;"><input type="checkbox">전공 연계성</label>
+            <label style="margin:0;"><input type="checkbox">융합적 사고</label>
+        </div>
+        <div style="display:flex;align-items:center;gap:2mm;flex-wrap:wrap;">
+            <strong style="color:#1e3a5f;">[공동체역량]</strong>
+            <label style="margin:0;"><input type="checkbox">공동체역량</label>
+            <label style="margin:0;"><input type="checkbox">리더십</label>
+            <label style="margin:0;"><input type="checkbox">협업·소통</label>
+            <label style="margin:0;"><input type="checkbox">나눔·배려</label>
+        </div>
+    </div>
+
+    <!-- 비교 분석 -->
+    <div class="sh">선배의 사례와 나의 생기부 활동 비교하기</div>
+    <div style="font-size:12.5px;">
+        <div style="margin-bottom:2mm;">▸ 나에게 보완이 필요한 선배의 핵심 탐구/역량:
+            <div class="wl-block"></div>
+            <div class="wl-block"></div>
+        </div>
+        <div style="margin-bottom:2mm;">▸ 나와 선배의 공통 진로 관심사 및 주제:
+            <div class="wl-block"></div>
+            <div class="wl-block"></div>
+        </div>
+        <div>▸ 이를 바탕으로 내가 3학년에서 시도할 심화 아이디어:
+            <div class="wl-block"></div>
+            <div class="wl-block"></div>
+            <div class="wl-block"></div>
+        </div>
+    </div>
+
+    <!-- QR -->
+    <div style="display:flex;gap:4mm;justify-content:flex-end;margin-top:2mm;align-items:flex-end;">
+        <div style="text-align:center;">
+            <div class="qr">QR</div>
+            <div style="font-size:10px;margin-top:1mm;">선배 사례 더 보기</div>
+        </div>
+        <div style="text-align:center;">
+            <div class="qr">QR</div>
+            <div style="font-size:10px;margin-top:1mm;">탐구 주제 아이디어</div>
+        </div>
+    </div>
+
+    <div class="pg-footer">3 / 4 &nbsp;|&nbsp; 학종을 여행하는 히치하이커를 위한 안내서</div>
+</div><!-- /p3 -->
+
+
+<!-- ════════════════════════════════════════
+
+     ════════════════════════════════════════ -->
+<div class="page" id="p4">
+
+    <div class="banner">← 왼쪽에 2면을 두고 오른쪽에 4면을 나란히 펼쳐, 1·2학년 활동을 어떻게 심화할지 설계하세요</div>
+
+    <div class="page-title-bar" style="margin-bottom:2mm;">
+        <div style="font-size:15px;font-weight:700;">4면 — 나의 탁월한 역량을 드러낼 3학년 학생부 시나리오 설계하기</div>
+    </div>
+
+    <!-- ① 활동 계획 개요 -->
+    <div class="sh" style="margin-top:0;">① 활동 계획 개요</div>
+    <table>
+        <tr>
+            <th style="width:13%;">구분</th>
+            <th style="width:26%;">계획 활동명 / 교과</th>
+            <th style="width:38%;">연결할 1·2학년 활동</th>
+            <th style="width:23%;">드러낼 역량</th>
+        </tr>
+        <tr style="height:13mm;">
+            <td style="color:#666;">교과세특</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:13mm;">
+            <td style="color:#666;">교과세특</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:13mm;">
+            <td style="color:#666;">정규동아리</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:13mm;">
+            <td style="color:#666;">자율활동</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr style="height:13mm;">
+            <td style="color:#666;">진로활동</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <!-- ② 핵심 활동 스토리 설계 -->
+    <div class="sh">② 핵심 활동 스토리 설계 (1~2개)</div>
+
+    <!-- 스토리 설계 1 -->
+    <div class="story-box">
+        <div class="story-head">
+            <strong>활동명/교과:</strong>
+            <span class="wl" style="flex:1;min-width:40mm;"></span>
+            <span style="font-size:11.5px;white-space:nowrap;">드러낼 역량:</span>
+            <label style="margin:0;font-size:11.5px;"><input type="checkbox">&nbsp;학업역량</label>
+            <label style="margin:0;font-size:11.5px;"><input type="checkbox">&nbsp;진로역량</label>
+            <label style="margin:0;font-size:11.5px;"><input type="checkbox">&nbsp;공동체역량</label>
+        </div>
+        <table style="font-size:11.5px;">
+            <tr>
+                <th style="width:30%;background:#fef3e2;vertical-align:middle;">① 동기와 연결고리<br><span
+                        style="font-weight:400;font-size:10.5px;">(1·2학년 어떤 활동이 이 계획으로 이어지나?)</span></th>
+                <td style="height:15mm;"></td>
+            </tr>
+            <tr>
+                <th style="background:#fef3e2;vertical-align:middle;">② 탐구 계획<br><span
+                        style="font-weight:400;font-size:10.5px;">(어떤 방법으로, 어떤 과정을 거칠 것인가?)</span></th>
+                <td style="height:17mm;"></td>
+            </tr>
+            <tr>
+                <th style="background:#fef3e2;vertical-align:middle;">③ 예상 결과물·성과<br><span
+                        style="font-weight:400;font-size:10.5px;">(세특에 어떤 내용이 기록되기를 원하는가?)</span></th>
+                <td style="height:15mm;"></td>
+            </tr>
+            <tr>
+                <th style="background:#fef3e2;vertical-align:middle;">④ 이후 확장 방향<br><span
+                        style="font-weight:400;font-size:10.5px;">(이 활동 후 어떻게 심화·연계할 것인가?)</span></th>
+                <td style="height:15mm;"></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 스토리 설계 2 -->
+    <div class="story-box">
+        <div class="story-head">
+            <strong>활동명/교과:</strong>
+            <span class="wl" style="flex:1;min-width:40mm;"></span>
+            <span style="font-size:11.5px;white-space:nowrap;">드러낼 역량:</span>
+            <label style="margin:0;font-size:11.5px;"><input type="checkbox">&nbsp;학업역량</label>
+            <label style="margin:0;font-size:11.5px;"><input type="checkbox">&nbsp;진로역량</label>
+            <label style="margin:0;font-size:11.5px;"><input type="checkbox">&nbsp;공동체역량</label>
+        </div>
+        <table style="font-size:11.5px;">
+            <tr>
+                <th style="width:30%;background:#fef3e2;vertical-align:middle;">① 동기와 연결고리<br><span
+                        style="font-weight:400;font-size:10.5px;">(1·2학년 어떤 활동이 이 계획으로 이어지나?)</span></th>
+                <td style="height:15mm;"></td>
+            </tr>
+            <tr>
+                <th style="background:#fef3e2;vertical-align:middle;">② 탐구 계획<br><span
+                        style="font-weight:400;font-size:10.5px;">(어떤 방법으로, 어떤 과정을 거칠 것인가?)</span></th>
+                <td style="height:17mm;"></td>
+            </tr>
+            <tr>
+                <th style="background:#fef3e2;vertical-align:middle;">③ 예상 결과물·성과<br><span
+                        style="font-weight:400;font-size:10.5px;">(세특에 어떤 내용이 기록되기를 원하는가?)</span></th>
+                <td style="height:15mm;"></td>
+            </tr>
+            <tr>
+                <th style="background:#fef3e2;vertical-align:middle;">④ 이후 확장 방향<br><span
+                        style="font-weight:400;font-size:10.5px;">(이 활동 후 어떻게 심화·연계할 것인가?)</span></th>
+                <td style="height:15mm;"></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ③ 나를 한 문장으로 -->
+    <div class="sh">③ 나를 한 문장으로</div>
+    <div style="border:2px solid #1e3a5f;background:#f0f6ff;padding:3mm 4mm;">
+        <div style="font-size:14px;margin-bottom:2mm;">
+            "나는 <span class="wl" style="width:148mm;"></span> 학생이다."
+        </div>
+        <div style="font-size:11px;color:#444;line-height:1.6;">
+            작성 공식: "나는 <b>[관심 분야]</b>를 <b>[방법·태도]</b>로 탐구해온 <b>[강점]</b>을 가진 학생이다."<br>
+            예시: "나는 환경공학에 관심을 갖고 3년간 화학·생물 융합 탐구를 이어온 학생이다."
+        </div>
+    </div>
+
+    <div class="pg-footer">4 / 4 &nbsp;|&nbsp; 학종을 여행하는 히치하이커를 위한 안내서</div>
+</div><!-- /p4 -->
+
+</body>
+</html>
