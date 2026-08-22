@@ -66,19 +66,19 @@ tailwind.config = {
 <!--BUILD:DOC-->
 <div id="doc"></div>
 <script>
-/* parts/ 를 순서대로 불러 조립한다.
+/* 원고/ 를 순서대로 불러 조립한다.
    fetch 라서 localhost 로 열어야 한다. file:// 로 열면 조각을 못 읽는다.
    배부본은 `node 가이드북빌드.js` 로 만든 단일 파일을 쓴다. */
 (function () {
   var PARTS = [
-    'parts/00_표지차례.html',
-    'parts/01_공통.html',
-    'parts/02_서류기반.html',
-    'parts/03_인적성.html',
-    'parts/04_특수.html',
-    'parts/05_제시문.html',
-    'parts/06_예시.html',
-    'parts/07_부록.html'
+    '원고/00_표지차례.html',
+    '원고/01_공통.html',
+    '원고/02_서류기반.html',
+    '원고/03_인적성.html',
+    '원고/04_특수.html',
+    '원고/05_제시문.html',
+    '원고/06_예시.html',
+    '원고/07_부록.html'
   ];
   Promise.all(PARTS.map(function (p) {
     return fetch(p + '?v=' + Date.now()).then(function (r) {

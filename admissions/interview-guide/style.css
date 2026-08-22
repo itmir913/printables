@@ -463,7 +463,7 @@ table.t .nowrap{ white-space:nowrap; }
 .ex .why::before{ content:'무엇이 갈랐나 — '; font-weight:800; color:var(--ink); }
 
 /* ============================================================
-   문항 은행 (별책) — bank.js 가 조판한다
+   문제 은행 (별책) — bank.js 가 조판한다
    ============================================================ */
 .qcols{
   flex:1; min-height:0;

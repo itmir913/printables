@@ -1,8 +1,8 @@
-/* 문항은행/*.md 를 읽어 별책 HTML 을 만든다.
+/* 문제은행/*.md 를 읽어 별책 HTML 을 만든다.
  *
- *   node 문항은행빌드.js        →  _배부용/면접문항은행.html
+ *   node 문제은행빌드.js        →  _배부용/면접문제은행.html
  *
- * 평소 작업에는 필요 없다. 문항은행.html 을 localhost 로 열면 그만이다.
+ * 평소 작업에는 필요 없다. 문제은행.html 을 localhost 로 열면 그만이다.
  * 이 스크립트는 파일 하나로 다른 사람에게 건네야 할 때만 쓴다.
  */
 'use strict';
@@ -10,15 +10,15 @@ const fs = require('fs');
 const path = require('path');
 
 const DIR = __dirname;
-const SRC = path.join(DIR, '문항은행');
+const SRC = path.join(DIR, '문제은행');
 const OUTDIR = path.join(DIR, '_배부용');
-const OUT = path.join(OUTDIR, '면접문항은행.html');
+const OUT = path.join(OUTDIR, '면접문제은행.html');
 
 const BOOKS = [
   { file: '01_유형별.md', title: '유형별 문항', part: '유형별', path: '갈래로 묶은 것',
-    foot: '면접 문항 은행 · 유형별' },
+    foot: '면접 문제 은행 · 유형별' },
   { file: '02_전공별.md', title: '전공·계열별 문항', part: '전공별', path: '계열로 묶은 것',
-    foot: '면접 문항 은행 · 전공별' }
+    foot: '면접 문제 은행 · 전공별' }
 ];
 
 function esc(s) {
@@ -61,7 +61,7 @@ const tw = fs.readFileSync(path.join(DIR, '면접지도가이드북.html'), 'utf
 const cover = `
 <div class="page cover">
   <div class="kicker">면접 지도 가이드북 별책</div>
-  <h1>면접 문항 은행</h1>
+  <h1>면접 문제 은행</h1>
   <hr>
   <div class="sub">유형별 · 전공별로 묶은 면접 문항 ${total}개</div>
   <div class="meta">
@@ -95,9 +95,9 @@ const cover = `
 
     <div class="note warn"><span class="t">해마다 바뀝니다</span><p>대학의 면접 문항은 해마다 달라집니다. 이 은행은 <b>지난 기출을 모은 것</b>이지 올해 나올 문항이 아닙니다. 지원 대학이 공개한 <b>선행학습 영향평가 결과보고서</b>를 반드시 함께 보십시오.</p></div>
 
-    <div class="note tip"><span class="t">고치는 법</span><p>이 별책은 <kbd>문항은행/01_유형별.md</kbd> 와 <kbd>02_전공별.md</kbd> 에서 만들어집니다. 문항을 더하거나 빼고 <kbd>node 문항은행빌드.js</kbd> 를 돌리면 면이 저절로 다시 나뉩니다.</p></div>
+    <div class="note tip"><span class="t">고치는 법</span><p>이 별책은 <kbd>문제은행/01_유형별.md</kbd> 와 <kbd>02_전공별.md</kbd> 에서 만들어집니다. 문항을 더하거나 빼고 <kbd>node 문제은행빌드.js</kbd> 를 돌리면 면이 저절로 다시 나뉩니다.</p></div>
   </div>
-  <div class="foot"><span>면접 문항 은행</span><span class="pg"></span></div>
+  <div class="foot"><span>면접 문제 은행</span><span class="pg"></span></div>
 </div>
 `;
 
@@ -106,7 +106,7 @@ const html = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>면접 문항 은행</title>
+<title>면접 문제 은행</title>
 ${tw}
 <style>
 ${css}
@@ -115,7 +115,7 @@ ${css}
 <body>
 
 <div class="bar no-print">
-  <b>면접 문항 은행</b>
+  <b>면접 문제 은행</b>
   <span>${total}문항</span>
   <button onclick="window.print()">인쇄</button>
 </div>

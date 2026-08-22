@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>면접 문항 은행</title>
+<title>면접 문제 은행</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -22,7 +22,7 @@ tailwind.config = {
 <body>
 
 <div class="bar no-print">
-  <b>면접 문항 은행</b>
+  <b>면접 문제 은행</b>
   <span id="count">읽는 중…</span>
   <button onclick="window.print()">인쇄</button>
 </div>
@@ -32,15 +32,15 @@ tailwind.config = {
 <script src="bank.js"></script>
 <script src="app.js"></script>
 <script>
-/* 문항은행/*.md 를 그때그때 읽어 조판한다. 빌드가 필요 없다.
+/* 문제은행/*.md 를 그때그때 읽어 조판한다. 빌드가 필요 없다.
    .md 를 고치고 새로 고침만 하면 면이 다시 나뉜다.
    fetch 라서 localhost 로 열어야 한다. */
 (function () {
   var BOOKS = [
-    { file: '문항은행/01_유형별.md', title: '유형별 문항', part: '유형별',
-      path: '갈래로 묶은 것', foot: '면접 문항 은행 · 유형별' },
-    { file: '문항은행/02_전공별.md', title: '전공·계열별 문항', part: '전공별',
-      path: '계열로 묶은 것', foot: '면접 문항 은행 · 전공별' }
+    { file: '문제은행/01_유형별.md', title: '유형별 문항', part: '유형별',
+      path: '갈래로 묶은 것', foot: '면접 문제 은행 · 유형별' },
+    { file: '문제은행/02_전공별.md', title: '전공·계열별 문항', part: '전공별',
+      path: '계열로 묶은 것', foot: '면접 문제 은행 · 전공별' }
   ];
 
   function esc(s) {
@@ -66,7 +66,7 @@ tailwind.config = {
     return '' +
 '<div class="page cover">' +
 '  <div class="kicker">면접 지도 가이드북 별책</div>' +
-'  <h1>면접 문항 은행</h1>' +
+'  <h1>면접 문제 은행</h1>' +
 '  <hr>' +
 '  <div class="sub">유형별 · 전공별로 묶은 면접 문항 ' + total + '개</div>' +
 '  <div class="meta"><span>' + stamp + ' 기준</span><span><b>@luminousky</b></span></div>' +
@@ -90,9 +90,9 @@ tailwind.config = {
 '    <h3 class="sh">갈래마다 개수가 다릅니다</h3>' +
 '    <p>일부러 맞추지 않았습니다. <b>실제 기출의 분포를 그대로 둔 것</b>입니다. 자기소개와 마지막 할 말은 다른 갈래의 절반도 되지 않습니다. 그만큼 <b>덜 묻는다</b>는 뜻입니다. 없는 문항을 지어내 채우지 않았습니다.</p>' +
 '    <div class="note warn"><span class="t">해마다 바뀝니다</span><p>대학의 면접 문항은 해마다 달라집니다. 이 은행은 <b>지난 기출을 모은 것</b>이지 올해 나올 문항이 아닙니다. 지원 대학이 공개한 <b>선행학습 영향평가 결과보고서</b>를 반드시 함께 보십시오.</p></div>' +
-'    <div class="note tip"><span class="t">고치는 법</span><p><kbd>문항은행/01_유형별.md</kbd> 와 <kbd>02_전공별.md</kbd> 를 고치고 <b>새로 고침</b>만 하면 됩니다. 면은 저절로 다시 나뉩니다.</p></div>' +
+'    <div class="note tip"><span class="t">고치는 법</span><p><kbd>문제은행/01_유형별.md</kbd> 와 <kbd>02_전공별.md</kbd> 를 고치고 <b>새로 고침</b>만 하면 됩니다. 면은 저절로 다시 나뉩니다.</p></div>' +
 '  </div>' +
-'  <div class="foot"><span>면접 문항 은행</span><span class="pg"></span></div>' +
+'  <div class="foot"><span>면접 문제 은행</span><span class="pg"></span></div>' +
 '</div>';
   }
 

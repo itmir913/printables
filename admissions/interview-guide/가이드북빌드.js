@@ -1,4 +1,4 @@
-/* parts/ 조각을 면접지도가이드북.html 틀에 부어 단일 파일을 만든다.
+/* 원고/ 조각을 면접지도가이드북.html 틀에 부어 단일 파일을 만든다.
  *
  *   node 가이드북빌드.js       →  _배부용/면접지도가이드북.html
  *
@@ -37,14 +37,14 @@ const js = read('app.js');
 
 /* 조각을 순서대로 잇는다 */
 const missing = PARTS.filter(function (f) {
-  return !fs.existsSync(path.join(DIR, 'parts', f));
+  return !fs.existsSync(path.join(DIR, '원고', f));
 });
 if (missing.length) {
   console.error('조각이 없습니다:\n  ' + missing.join('\n  '));
   process.exit(1);
 }
 const body = PARTS.map(function (f) {
-  return '<!-- ══════════ ' + f + ' ══════════ -->\n' + read(path.join('parts', f)).trim();
+  return '<!-- ══════════ ' + f + ' ══════════ -->\n' + read(path.join('원고', f)).trim();
 }).join('\n\n');
 
 /* 1. 조각 삽입 — 로더 스크립트를 통째로 갈아 끼운다 */
