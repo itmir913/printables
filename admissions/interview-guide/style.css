@@ -1,0 +1,429 @@
+/* ============================================================
+   수시 면접 지도 — 면접지도교사 연수자료
+   A4 세로 / 흑백 레이저 인쇄 전용
+   Chrome 인쇄: 여백 '없음' + 배경 그래픽 체크
+
+   원칙: 색으로 정보를 구분하지 않는다.
+        위계는 선 굵기 · 테두리 모양 · bold · 밑줄로 만든다.
+
+   ── Tailwind 와의 역할 분담 ────────────────────────────────
+   이 파일   = 인쇄 규격과 부품(컴포넌트). 면 크기, 여백, 면 넘김,
+              머리말·꼬리말, 상자 세 종류, 표, 학생 기입칸.
+              인터넷이 끊겨도 이 파일만으로 A4 골격은 살아 있어야 한다.
+   Tailwind = 면 안에서의 배치와 간격(유틸리티). 단위 토큰은
+              면접지도연수.html 의 tailwind.config 에 정의해 두었다.
+   HTML 의 style="..." 속성은 쓰지 않는다. 한 번만 쓰는 치수도
+   유틸리티로 적는다.  예) style="min-width:40mm" → min-w-[40mm]
+   ============================================================ */
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css");
+
+:root{
+  --font: "Pretendard Variable", Pretendard,
+          "Noto Sans KR", "맑은 고딕", "Malgun Gothic", sans-serif;
+
+  /* ── 무채색만 ── */
+  --ink:    #000;      /* 제목 · 강조 */
+  --body:   #1f1f1f;   /* 본문. 순검정보다 살짝 눌러 눈이 덜 아프게 */
+  --sub:    #444;      /* 보조 설명 */
+  --mute:   #6b6b6b;   /* 캡션 · 각주 */
+  --faint:  #949494;   /* 꼬리말 */
+
+  --line:   #cfcfcf;   /* 얇은 구분선 */
+  --line-2: #8f8f8f;   /* 진한 구분선 */
+  --fill:   #f2f2f2;   /* 옅은 바탕 — 이보다 진하게 쓰지 않는다 */
+  --fill-2: #e6e6e6;   /* 표 머리 · 태그 */
+}
+
+@page{ size:A4 portrait; margin:0; }
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+body{
+  font-family:var(--font);
+  font-size:12pt; line-height:1.42;
+  color:var(--body);
+  background:#c9c9c9;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
+
+  /* 한국어 줄바꿈 — 어절(낱말) 단위로 끊는다.
+     keep-all  : 어절 중간에서 자르지 않는다. 한국어 가독성의 핵심.
+     overflow-wrap:break-word 는 안전판이다. 띄어쓰기 없는 긴 덩어리
+     (URL·영문 연속) 하나가 칸을 뚫고 나가는 것만 막는다.
+     word-break:break-all / break-word 로 바꾸지 말 것 — 어절이 잘린다. */
+  word-break:keep-all; overflow-wrap:break-word; line-break:strict;
+  hanging-punctuation:allow-end;
+}
+
+/* 글꼴을 하나로 못박는다.
+   브라우저와 Tailwind preflight 는 code·kbd·samp·pre 에 고정폭 글꼴을
+   먹인다. 이 자료에는 고정폭이 들어갈 자리가 없다. */
+code, kbd, samp, pre, tt, var, input, button, select, textarea,
+th, td, h1, h2, h3, h4, h5, h6{ font-family:var(--font); }
+
+@media screen{
+  /* 화면에서 보이는 모습이 곧 인쇄될 모습이 되도록, 면을 낱장 카드로 세워 둔다.
+     index.html 은 조각을 #doc 안에 붙이므로 #doc 에도 같은 배치를 준다. */
+  body, #doc{ display:flex; flex-direction:column; align-items:center; gap:24px; }
+  body{ padding:28px 0 60px; }
+  #doc{ width:100%; }
+  .page{
+    box-shadow:0 20px 25px -5px rgba(0,0,0,.10), 0 10px 10px -5px rgba(0,0,0,.04);
+    border:1px solid rgba(0,0,0,.05); border-radius:10px;
+  }
+}
+@media print{ body{ background:#fff; } }
+
+/* ---------------------------------------------------- 면 */
+.page{
+  position:relative;
+  width:210mm; height:297mm;
+  padding:9.5mm 12mm 11mm;
+  background:#fff;
+  overflow:hidden;
+  display:flex; flex-direction:column;
+  page-break-after:always; break-after:page;
+  page-break-inside:avoid; break-inside:avoid;
+}
+.page:last-child{ page-break-after:auto; break-after:auto; }
+@media print{ .page{ box-shadow:none; border:none; border-radius:0; } }
+
+/* ---------------------------------------------------- 머리말 */
+.head{
+  flex:none; margin-bottom:3.4mm;
+  padding-bottom:2mm; border-bottom:.9mm solid var(--ink);
+  display:flex; align-items:flex-end; gap:5mm;
+}
+.head .ttl{ flex:1; min-width:0; }
+.head .no{
+  display:block; font-size:12pt; font-weight:700; color:var(--mute);
+  letter-spacing:.14em; margin-bottom:1.2mm;
+}
+.head h2{ font-size:21pt; font-weight:800; letter-spacing:-.025em; line-height:1.28; color:var(--ink); }
+.head .path{
+  flex:none; font-size:12pt; color:var(--sub);
+  border:1px solid var(--line-2); padding:1.2mm 3mm; border-radius:1mm;
+  white-space:nowrap; background:var(--fill);
+}
+
+/* ---------------------------------------------------- 본문 흐름 */
+.body{ flex:1; min-height:0; display:flex; flex-direction:column; gap:2.6mm; }
+.body.two{ flex-direction:row; gap:7mm; }
+.body.two > *{ flex:1; min-width:0; }
+.body.two .col{ display:flex; flex-direction:column; gap:5mm; }
+.body.narrow-l.two > :first-child{ flex:.72; }
+.body.wide-l.two   > :first-child{ flex:1.45; }
+
+/* 본문 서술은 기준 크기(12pt = text-base)를 그대로 쓴다.
+   종이는 화면보다 가까이서 보고 해상도가 높아 12pt 면 충분히 크다. */
+p{ color:var(--body); }
+p + p{ margin-top:1.8mm; }
+strong,b{ color:var(--ink); font-weight:700; }
+.u{ text-decoration:underline; text-decoration-thickness:.35mm; text-underline-offset:.9mm; }
+/* 한글 이탤릭은 합성되어 지저분하다. 영문·용어·인용에만 쓴다. */
+em,i{ font-style:italic; }
+.lead{ font-size:13.5pt; color:var(--sub); line-height:1.42; }
+
+/* 소제목 */
+h3.sh{
+  font-size:14.5pt; font-weight:800; color:var(--ink);
+  border-left:1.6mm solid var(--ink); padding-left:3mm;
+  margin-bottom:1.3mm; line-height:1.25;
+}
+h4.sh2{
+  font-size:13.5pt; font-weight:700; color:var(--ink);
+  padding-bottom:1mm; margin-bottom:1.5mm;
+  border-bottom:1px solid var(--line-2);
+}
+
+/* ---------------------------------------------------- 목록 */
+/* 번호 목록 — 브라우저 기본 번호매기기를 그대로 쓴다.
+   Tailwind preflight 가 ol 의 list-style 을 없애므로 여기서 되살린다. */
+ol.steps{
+  list-style:decimal outside;
+  padding-left:7.5mm;
+}
+ol.steps > li{
+  margin-bottom:1.8mm; padding-left:1.5mm; color:var(--body);
+}
+ol.steps > li:last-child{ margin-bottom:0; }
+ol.steps > li::marker{ font-weight:800; color:var(--ink); font-size:10.5pt; }
+
+ul.dots{ list-style:none; }
+ul.dots li{ position:relative; padding-left:5mm; margin-bottom:1.2mm; }
+ul.dots li:last-child{ margin-bottom:0; }
+ul.dots li::before{
+  content:''; position:absolute; left:0; top:2.5mm;
+  width:1.5mm; height:1.5mm; background:var(--ink);
+}
+ul.dash{ list-style:none; }
+ul.dash li{ position:relative; padding-left:5mm; margin-bottom:1.2mm; }
+ul.dash li::before{
+  content:'—'; position:absolute; left:0; top:0; color:var(--mute); font-weight:700;
+}
+
+/* 화면 요소 · 용어 태그 */
+kbd{
+  font-family:inherit; font-size:12pt; font-weight:700;
+  background:var(--fill-2); color:var(--ink);
+  border:1px solid var(--line-2); border-radius:1mm;
+  padding:.3mm 1.8mm; white-space:nowrap;
+}
+
+/* ---------------------------------------------------- 상자
+   색이 아니라 테두리 모양으로 구분한다. */
+.note{
+  border:1px solid var(--line-2);
+  border-left:1.4mm solid var(--ink);
+  padding:2.2mm 3mm; font-size:12.5pt; background:var(--fill);
+}
+.note .t{
+  display:block; font-weight:800; color:var(--ink);
+  margin-bottom:1.5mm; font-size:13.5pt;
+}
+.note .t::before{ content:'■ '; }
+.note p{ color:var(--sub); font-size:inherit; }
+
+.note.warn{ border-left-style:double; border-left-width:2.2mm; background:#fff; }
+.note.warn .t::before{ content:'▲ 주의 — '; }
+
+.note.tip{ border-left-style:dashed; border-left-width:1.2mm; background:#fff; }
+.note.tip .t::before{ content:'● 팁 — '; }
+
+.note.quote{
+  border:none; border-left:.5mm solid var(--line-2);
+  background:none; font-style:normal; color:var(--sub);
+  padding:1mm 0 1mm 4mm;
+}
+.note.quote .t::before{ content:'“'; }
+
+/* ---------------------------------------------------- 표 */
+table.t{ width:100%; border-collapse:collapse; font-size:12pt; }
+table.t th{
+  background:var(--fill-2); color:var(--ink); font-weight:800;
+  text-align:left; padding:1.3mm 2.2mm;
+  border-top:.6mm solid var(--ink); border-bottom:.6mm solid var(--ink);
+  white-space:nowrap;
+}
+table.t td{
+  padding:1.3mm 2.2mm; color:var(--body);
+  border-bottom:1px solid var(--line); vertical-align:top;
+}
+table.t tr:last-child td{ border-bottom:.6mm solid var(--ink); }
+/* 격자형 — 학생이 손으로 채우는 표 */
+table.t.grid th, table.t.grid td{ border:1px solid var(--line-2); }
+table.t.grid th{ text-align:center; }
+table.t.grid tr:last-child td{ border-bottom:1px solid var(--line-2); }
+
+/* ---------------------------------------------------- 타일 */
+.tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(0,1fr)); gap:2.4mm; }
+.tiles.c2{ grid-template-columns:repeat(2,1fr); }
+.tiles.c3{ grid-template-columns:repeat(3,1fr); }
+.tile{ border:1px solid var(--line-2); padding:2.4mm; font-size:12.5pt; }
+.tile h3{ font-size:13.5pt; font-weight:800; color:var(--ink); margin-bottom:1.8mm; }
+.tile p{ color:var(--sub); font-size:inherit; }
+
+/* ---------------------------------------------------- 학생 배부용 표시 */
+/* 검은 띠 없이 구분한다 — 머리말을 이중선으로, 모서리에 온전한 표시 상자 */
+.page.sheet .head{ border-bottom-style:double; border-bottom-width:2.2mm; }
+.page.sheet .head .path{ border-color:var(--ink); border-width:.4mm; font-weight:700; }
+.sheet-tag{
+  position:absolute; top:4mm; right:12mm;
+  border:.4mm solid var(--ink); background:#fff; color:var(--ink);
+  font-size:12pt; font-weight:800; letter-spacing:.08em;
+  padding:.8mm 3mm 1mm; line-height:1.3;
+}
+
+/* 학생이 쓰는 칸 */
+.wl{ display:inline-block; border-bottom:1px solid var(--line-2); min-width:22mm; height:5.5mm; vertical-align:bottom; }
+.wl-block{ display:block; border-bottom:1px solid var(--line-2); height:8mm; margin-bottom:2mm; }
+.wbox{ border:1px solid var(--line-2); min-height:20mm; padding:2.5mm 3mm; }
+.wbox.lined{
+  background-image:repeating-linear-gradient(
+    to bottom, transparent 0 7.5mm, var(--line) 7.5mm 7.5mm, transparent 7.5mm 8mm);
+}
+.chk{ display:inline-flex; align-items:center; gap:1.5mm; margin-right:4mm; font-size:12.5pt; }
+.chk::before{ content:''; width:3.4mm; height:3.4mm; border:.35mm solid var(--ink); flex:none; }
+
+/* ---------------------------------------------------- 꼬리말 */
+.foot{
+  position:absolute; left:12mm; right:12mm; bottom:5mm;
+  display:flex; align-items:center; gap:3mm;
+  font-size:12pt; color:var(--faint);
+  border-top:1px solid var(--line); padding-top:2mm;
+}
+.foot .pg{ margin-left:auto; font-weight:800; color:var(--sub); font-size:13pt; }
+/* 캡션도 text-base(12pt) 아래로 내려가지 않는다 */
+.cap{ font-size:12pt !important; color:var(--mute); }
+.fn{ font-size:12pt; color:var(--mute); line-height:1.5; }
+
+/* ---------------------------------------------------- 표지 */
+.cover{ justify-content:center; align-items:center; text-align:center; border:none; }
+.cover .kicker{ font-size:12pt; font-weight:700; letter-spacing:.32em; color:var(--sub); margin-bottom:10mm; }
+.cover h1{ font-size:34pt; font-weight:800; letter-spacing:-.035em; line-height:1.24; color:var(--ink); }
+.cover hr{ width:34mm; height:1.4mm; background:var(--ink); border:none; margin:9mm auto; }
+.cover .sub{ font-size:15pt; color:var(--sub); margin-bottom:22mm; }
+.cover .meta{ display:flex; gap:5mm; justify-content:center; flex-wrap:wrap; }
+.cover .meta span{ border:1px solid var(--line-2); padding:2mm 6mm; font-size:13pt; color:var(--sub); }
+.cover .meta b{ color:var(--ink); }
+
+/* ---------------------------------------------------- 차례 */
+.toc{ display:flex; flex-direction:column; gap:5mm; }
+.toc .grp h3{
+  font-size:13.5pt; font-weight:800; color:var(--ink);
+  padding-bottom:1.5mm; margin-bottom:2mm; border-bottom:.5mm solid var(--ink);
+}
+.toc .grp a, .toc .grp div{
+  display:flex; gap:2mm; align-items:baseline;
+  padding:1mm 0; font-size:12.5pt; color:var(--sub); text-decoration:none;
+}
+.toc .grp .dotfill{ flex:1; border-bottom:1px dotted var(--line-2); }
+.toc .grp .pg{ color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums; }
+.toc .soon{ color:var(--faint); }
+
+/* ---------------------------------------------------- 인쇄 조작 (화면 전용) */
+.bar{
+  position:fixed; top:0; left:0; right:0; z-index:9999;
+  display:flex; align-items:center; gap:8px;
+  /* 창이 좁을 때 가운데 정렬은 왼쪽 항목을 잘라먹는다. 줄바꿈으로 받는다. */
+  justify-content:center; flex-wrap:wrap;
+  padding:8px 14px; background:rgba(20,20,20,.94); color:#fff;
+  font-family:var(--font); font-size:13px;
+}
+.bar b{ margin-right:2px; font-weight:700; color:#fff; white-space:nowrap; }
+.bar button{
+  font-family:inherit; font-size:13px; cursor:pointer;
+  padding:6px 14px; border:1px solid #666; border-radius:4px;
+  background:#2c2c2c; color:#fff;
+}
+.bar button:hover{ background:#3d3d3d; }
+.bar button[aria-pressed="true"]{ background:#fff; color:#111; border-color:#fff; font-weight:700; }
+@media screen{ body{ padding-top:96px; } }  /* 조작 막대가 두 줄로 접혀도 가리지 않게 */
+@media print{ .bar{ display:none !important; } }
+
+/* 선택 인쇄 — 화면에서도 즉시 반영되어 무엇이 나갈지 눈으로 확인된다 */
+body.only-teacher .page.sheet{ display:none !important; }
+body.only-student .page:not(.sheet){ display:none !important; }
+
+/* ============================================================
+   가이드북 전용 부품
+   ============================================================ */
+
+/* ---------------------------------------------------- 편 표시 */
+/* 머리말의 작은 글씨에 "제1부 · 공통" 같은 위치 표시를 넣는다 */
+.head .no .part{ color:var(--ink); }
+.head .no .part::after{ content:' · '; color:var(--faint); }
+
+/* ---------------------------------------------------- 예시 문항 상자 */
+/* 실제 기출이 아니라 유형을 보여주려고 새로 지은 예시다 */
+.qbox{
+  border:1px solid var(--line-2); border-top:.6mm solid var(--ink);
+  padding:2mm 2.6mm; font-size:12.5pt;
+}
+.qbox .qt{
+  display:block; font-weight:800; color:var(--ink);
+  margin-bottom:2mm; padding-bottom:1.2mm; border-bottom:1px dotted var(--line-2);
+}
+.qbox ul{ list-style:none; }
+.qbox li{ position:relative; padding-left:6.5mm; margin-bottom:1.6mm; color:var(--sub); font-size:inherit; }
+.qbox li:last-child{ margin-bottom:0; }
+.qbox li::before{
+  content:'Q.'; position:absolute; left:0; top:0;
+  font-weight:800; color:var(--ink); font-size:12pt;
+}
+/* 꼬리질문은 한 칸 들여 잇는다 */
+.qbox li.sub{ padding-left:11mm; color:var(--mute); font-size:12pt; }
+.qbox li.sub::before{ content:'└'; left:6mm; font-weight:400; }
+
+/* ---------------------------------------------------- 순서도 */
+.flow{ display:flex; flex-direction:column; }
+.flow .step{
+  border:1px solid var(--line-2); padding:1.6mm 2.6mm; font-size:12.5pt; background:#fff;
+}
+.flow .step > b:first-child{ display:block; }   /* 첫 굵은 글씨만 제목 줄로. 문장 속 강조는 그대로 흐르게 */
+.flow .step.end{ border-width:.5mm; border-color:var(--ink); }
+.flow .arrow{
+  align-self:center; font-weight:800; color:var(--ink);
+  line-height:1; padding:.5mm 0; font-size:12pt;
+}
+.flow .branch{ display:flex; gap:3mm; }
+.flow .branch > *{ flex:1; min-width:0; }
+
+/* ---------------------------------------------------- 좌우 대비 */
+/* 고쳐야 할 말 / 고친 말 처럼 마주 놓고 보여줄 때 */
+.vs{ display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line-2); }
+.vs > div{ padding:2mm 2.6mm; font-size:12.5pt; color:var(--sub); }
+.vs > div + div{ border-left:1px solid var(--line-2); }
+.vs .h{
+  display:block; font-weight:800; color:var(--ink); font-size:13pt;
+  margin-bottom:1.5mm; padding-bottom:1mm; border-bottom:1px solid var(--line);
+}
+.vs .bad .h::before{ content:'✕ '; }
+.vs .good .h::before{ content:'○ '; }
+
+/* ---------------------------------------------------- 촘촘한 표 */
+table.t.mini{ font-size:12pt; }
+table.t.mini th, table.t.mini td{ padding:1.5mm 2.2mm; }
+
+/* 시간표처럼 가운데 정렬이 필요한 열 */
+table.t .c{ text-align:center; }
+table.t .nowrap{ white-space:nowrap; }
+
+/* ---------------------------------------------------- 낱말 묶음 */
+.chips{ display:flex; flex-wrap:wrap; gap:1.5mm; }
+.chips span{
+  border:1px solid var(--line-2); padding:.8mm 2.4mm;
+  font-size:12pt; color:var(--sub); white-space:nowrap;
+}
+
+/* ---------------------------------------------------- 차례 */
+/* 면 번호는 app.js 가 채운다. 손으로 적지 않는다. */
+.toc .grp a{ color:var(--sub); }
+.toc .grp a:hover{ color:var(--ink); }
+.toc .grp .t2{ padding-left:4mm; font-size:12pt; color:var(--mute); }
+
+/* ---------------------------------------------------- 마지막 면 서명 */
+.sign{
+  margin-top:auto; border-top:1px solid var(--line);
+  padding-top:3mm; font-size:9.5pt; color:var(--mute);
+  display:flex; justify-content:space-between; gap:4mm;
+}
+.sign b{ color:var(--sub); }
+
+/* ---------------------------------------------------- 핵심 정리 / 체크리스트
+   꼭지가 끝날 때마다 붙인다. 시간 없는 사람은 이것만 읽어도 되게.
+   margin-top:auto 라서 면의 맨 아래에 저절로 내려가 붙는다. */
+.sum{
+  margin-top:auto;
+  border-top:.7mm solid var(--ink); border-bottom:.7mm solid var(--ink);
+  padding:1.7mm 0 1.5mm;
+}
+.sum.inline{ margin-top:0; }              /* 면 중간에 두어야 할 때 */
+.sum .st{
+  display:block; font-size:12pt; font-weight:800; color:var(--ink);
+  letter-spacing:.16em; margin-bottom:1.4mm;
+}
+.sum .st::after{
+  content:''; display:inline-block; width:6mm; height:.35mm;
+  background:var(--ink); margin-left:2.5mm; vertical-align:middle;
+}
+.sum ul{ list-style:none; }
+.sum ul li{
+  position:relative; padding-left:6mm; margin-bottom:1mm;
+  font-size:12.5pt; color:var(--body);
+}
+.sum ul li:last-child{ margin-bottom:0; }
+.sum ul li::before{
+  content:''; position:absolute; left:0; top:1.6mm;
+  width:3.2mm; height:3.2mm; border:.35mm solid var(--ink);
+}
+/* 체크가 아니라 그냥 요약 문장으로 쓸 때 — 네모 대신 짧은 선 */
+.sum.plain ul li::before{
+  content:''; top:2.6mm; width:3.2mm; height:.5mm; background:var(--ink); border:none;
+}
+.sum b{ color:var(--ink); }
+/* 두 단으로 나눠 담을 때 */
+.sum ul.two{ display:grid; grid-template-columns:1fr 1fr; gap:0 5mm; }
+
+/* 차례를 두 단으로 */
+.toc.cols{ display:grid; grid-template-columns:1fr 1fr; gap:4mm 7mm; align-content:start; }
