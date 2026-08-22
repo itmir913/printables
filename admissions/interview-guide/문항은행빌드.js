@@ -1,8 +1,9 @@
 /* 문항은행/*.md 를 읽어 별책 HTML 을 만든다.
  *
- *   node 문항은행빌드.js        →  면접문항은행.html
+ *   node 문항은행빌드.js        →  _배부용/면접문항은행.html
  *
- * .md 만 고치면 면은 저절로 다시 나뉜다. 조판은 bank.js 가 브라우저에서 한다.
+ * 평소 작업에는 필요 없다. 문항은행.html 을 localhost 로 열면 그만이다.
+ * 이 스크립트는 파일 하나로 다른 사람에게 건네야 할 때만 쓴다.
  */
 'use strict';
 const fs = require('fs');
@@ -10,7 +11,8 @@ const path = require('path');
 
 const DIR = __dirname;
 const SRC = path.join(DIR, '문항은행');
-const OUT = path.join(DIR, '면접문항은행.html');
+const OUTDIR = path.join(DIR, '_배부용');
+const OUT = path.join(OUTDIR, '면접문항은행.html');
 
 const BOOKS = [
   { file: '01_유형별.md', title: '유형별 문항', part: '유형별', path: '갈래로 묶은 것',
@@ -135,8 +137,9 @@ buildBank(${JSON.stringify(books.map(b => ({
 </html>
 `;
 
+fs.mkdirSync(OUTDIR, { recursive: true });
 fs.writeFileSync(OUT, html, 'utf8');
-console.log('만들었습니다 → ' + path.basename(OUT));
+console.log('만들었습니다 → _배부용/' + path.basename(OUT));
 console.log('  묶음 ' + books.length + '권, 갈래 ' +
   books.reduce((n, b) => n + b.groups.length, 0) + '개, 문항 ' + total + '개, ' +
   (Buffer.byteLength(html, 'utf8') / 1024).toFixed(0) + 'KB');

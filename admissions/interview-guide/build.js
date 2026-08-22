@@ -1,7 +1,9 @@
 /* parts/ 조각을 index.html 틀에 부어 단일 파일을 만든다.
  *
- *   node build.js            →  면접지도가이드북.html
+ *   node build.js            →  _배부용/면접지도가이드북.html
  *
+ * 평소 작업에는 필요 없다. index.html 을 localhost 로 열면 그만이다.
+ * 이 스크립트는 파일 하나로 다른 사람에게 건네야 할 때만 쓴다.
  * 산출물은 style.css 와 app.js 를 안에 품는다. 그래야 파일 하나만 건네도 열린다.
  * (원고에는 style="..." 을 쓰지 않는다. 여기서 <style> 로 묶는 것은 빌드 산출물의
  *  이야기이지 원고의 이야기가 아니다.)
@@ -11,7 +13,8 @@ const fs = require('fs');
 const path = require('path');
 
 const DIR = __dirname;
-const OUT = path.join(DIR, '면접지도가이드북.html');
+const OUTDIR = path.join(DIR, '_배부용');
+const OUT = path.join(OUTDIR, '면접지도가이드북.html');
 
 const PARTS = [
   '00_표지차례.html',
@@ -56,9 +59,10 @@ html = html.replace(DOC_RE, body);
 html = html.replace('<link rel="stylesheet" href="style.css">', '<style>\n' + css + '\n</style>');
 html = html.replace('<script src="app.js"></script>', '<script>\n' + js + '\n</script>');
 
+fs.mkdirSync(OUTDIR, { recursive: true });
 fs.writeFileSync(OUT, html, 'utf8');
 
 const pages = (body.match(/class="page/g) || []).length;
-console.log('만들었습니다 → ' + path.basename(OUT));
+console.log('만들었습니다 → _배부용/' + path.basename(OUT));
 console.log('  조각 ' + PARTS.length + '개, 면 ' + pages + '개, ' +
             (Buffer.byteLength(html, 'utf8') / 1024).toFixed(0) + 'KB');
