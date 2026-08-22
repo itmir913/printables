@@ -204,7 +204,13 @@ kbd{
 .note.quote .t::before{ content:'“'; }
 
 /* ---------------------------------------------------- 표 */
-table.t{ width:100%; border-collapse:collapse; font-size:12pt; }
+/* 표는 언제나 면의 가로 폭을 다 쓴다. 학생이 손으로 쓰는 칸이 좁아지면 안 된다.
+   display:table 을 못박아 두는 까닭 — Tailwind 의 유틸리티(.grid .flex .block …)와
+   이름이 겹치면 표가 표이기를 그만둔다. 그래서 격자형은 .ruled 로 부른다. */
+table.t{
+  display:table; width:100%;
+  border-collapse:collapse; font-size:12pt;
+}
 table.t th{
   background:var(--fill-2); color:var(--ink); font-weight:800;
   text-align:left; padding:1.2mm 2.1mm;
@@ -216,10 +222,13 @@ table.t td{
   border-bottom:1px solid var(--line); vertical-align:top;
 }
 table.t tr:last-child td{ border-bottom:.6mm solid var(--ink); }
-/* 격자형 — 학생이 손으로 채우는 표 */
-table.t.grid th, table.t.grid td{ border:1px solid var(--line-2); }
-table.t.grid th{ text-align:center; }
-table.t.grid tr:last-child td{ border-bottom:1px solid var(--line-2); }
+/* 격자형 — 학생이 손으로 채우는 표.
+   칸 너비를 적어 준 대로 지킨다(table-layout:fixed). 머리말이 길다고 칸을
+   넓혀 가면 학생이 쓰는 칸이 그만큼 좁아지기 때문이다. */
+table.t.ruled{ table-layout:fixed; }
+table.t.ruled th, table.t.ruled td{ border:1px solid var(--line-2); overflow-wrap:break-word; }
+table.t.ruled th{ text-align:center; white-space:normal; }
+table.t.ruled tr:last-child td{ border-bottom:1px solid var(--line-2); }
 
 /* ---------------------------------------------------- 타일 */
 .tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(0,1fr)); gap:2.4mm; }
@@ -248,6 +257,14 @@ table.t.grid tr:last-child td{ border-bottom:1px solid var(--line-2); }
   background-image:repeating-linear-gradient(
     to bottom, transparent 0 7.5mm, var(--line) 7.5mm 7.5mm, transparent 7.5mm 8mm);
 }
+/* 예시 글씨 — 어떻게 채우는지 보여 주는 자리다. 표의 첫 행에만 둔다.
+   학생이 쓰는 칸이 아니므로 흐리게 두되, 흑백 레이저에서도 읽혀야 하니
+   12pt 아래로 내리지 않는다. 학생은 이 줄 아래에 이어서 쓴다. */
+.eg{
+  display:block; font-size:12pt; font-weight:400; line-height:1.32;
+  color:var(--faint);
+}
+
 .chk{ display:inline-flex; align-items:center; gap:1.5mm; margin-right:4mm; font-size:12.5pt; }
 .chk::before{ content:''; width:3.4mm; height:3.4mm; border:.35mm solid var(--ink); flex:none; }
 
@@ -453,6 +470,9 @@ table.t .nowrap{ white-space:nowrap; }
   margin-bottom:1.4mm; line-height:1.35;
 }
 .ex .rec::before{ content:'기록 — '; color:var(--mute); font-weight:700; }
+/* 묶음의 머리가 학생부 기록이 아닐 때 — 면접관이 던지는 문항이거나 상황이다 */
+.ex.q .rec::before{ content:'문항 — '; }
+.ex.s .rec::before{ content:'상황 — '; }
 .ex .qs{ list-style:none; margin-bottom:1.6mm; }
 .ex .qs li{
   position:relative; padding-left:6.5mm; margin-bottom:.8mm;
