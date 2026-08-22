@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>면접 문항 은행</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: {
+      sans: ['Pretendard Variable','Pretendard','Noto Sans KR','맑은 고딕','Malgun Gothic','sans-serif'],
+      mono: ['Pretendard Variable','Pretendard','Noto Sans KR','맑은 고딕','Malgun Gothic','sans-serif']
+    }
+  } }
+}
+</script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bar no-print">
+  <b>면접 문항 은행</b>
+  <span id="count">읽는 중…</span>
+  <button onclick="window.print()">인쇄</button>
+</div>
+
+<div id="doc"></div>
+
+<script src="bank.js"></script>
+<script src="app.js"></script>
+<script>
+/* 문항은행/*.md 를 그때그때 읽어 조판한다. 빌드가 필요 없다.
+   .md 를 고치고 새로 고침만 하면 면이 다시 나뉜다.
+   fetch 라서 localhost 로 열어야 한다. */
+(function () {
+  var BOOKS = [
+    { file: '문항은행/01_유형별.md', title: '유형별 문항', part: '유형별',
+      path: '갈래로 묶은 것', foot: '면접 문항 은행 · 유형별' },
+    { file: '문항은행/02_전공별.md', title: '전공·계열별 문항', part: '전공별',
+      path: '계열로 묶은 것', foot: '면접 문항 은행 · 전공별' }
+  ];
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function parse(md) {
+    var groups = [], cur = null;
+    md.split(/\r?\n/).forEach(function (line) {
+      if (line.indexOf('## ') === 0) {
+        cur = { name: line.slice(3).trim(), items: [] };
+        groups.push(cur);
+      } else if (line.indexOf('- ') === 0 && cur) {
+        cur.items.push(esc(line.slice(2).trim()));
+      }
+    });
+    return groups.filter(function (g) { return g.items.length; });
+  }
+
+  function cover(total) {
+    var d = new Date();
+    var stamp = d.getFullYear() + '. ' + (d.getMonth() + 1) + '. ' + d.getDate() + '.';
+    return '' +
+'<div class="page cover">' +
+'  <div class="kicker">면접 지도 가이드북 별책</div>' +
+'  <h1>면접 문항 은행</h1>' +
+'  <hr>' +
+'  <div class="sub">유형별 · 전공별로 묶은 면접 문항 ' + total + '개</div>' +
+'  <div class="meta"><span>' + stamp + ' 기준</span><span><b>@luminousky</b></span></div>' +
+'</div>' +
+'<div class="page">' +
+'  <div class="head">' +
+'    <div class="ttl"><span class="no">쓰는 법</span><h2>이 문항을 어떻게 쓰는가</h2></div>' +
+'    <span class="path">별책</span>' +
+'  </div>' +
+'  <div class="body">' +
+'    <p class="lead">교육청 자료집·대학 공개 자료·후기 자료집에 공개된 기출 문항을 모아 중복을 제거하고 다듬었습니다. 대학·학교·개인을 특정하는 표현은 삭제했습니다.</p>' +
+'    <h3 class="sh">외우게 하지 마십시오</h3>' +
+'    <p>여기 있는 문항이 그대로 나오지 않습니다. 쓸모는 <b>결을 익히는 데</b> 있습니다. 학생이 자기 학생부로 <b>같은 결의 문항을 스스로 만들게</b> 하는 것이 목적입니다.</p>' +
+'    <h3 class="sh">이렇게 씁니다</h3>' +
+'    <ol class="steps">' +
+'      <li><b>학생이 고르게 합니다.</b> 자기 계열과 해당하는 갈래를 펼쳐 놓고, 답할 수 있는 것과 막히는 것을 표시하게 합니다.</li>' +
+'      <li><b>막히는 것부터</b> 준비시킵니다. 답할 수 있는 것은 이미 준비된 것입니다.</li>' +
+'      <li><b>모의면접 문항지</b>를 여기서 뽑습니다. 공통 갈래에서 셋, 계열에서 둘, 학생부에서 셋.</li>' +
+'      <li>고른 문항마다 <b>꼬리질문</b>을 하나씩 붙여 보게 합니다. 그것까지가 준비입니다.</li>' +
+'    </ol>' +
+'    <h3 class="sh">갈래마다 개수가 다릅니다</h3>' +
+'    <p>일부러 맞추지 않았습니다. <b>실제 기출의 분포를 그대로 둔 것</b>입니다. 자기소개와 마지막 할 말은 다른 갈래의 절반도 되지 않습니다. 그만큼 <b>덜 묻는다</b>는 뜻입니다. 없는 문항을 지어내 채우지 않았습니다.</p>' +
+'    <div class="note warn"><span class="t">해마다 바뀝니다</span><p>대학의 면접 문항은 해마다 달라집니다. 이 은행은 <b>지난 기출을 모은 것</b>이지 올해 나올 문항이 아닙니다. 지원 대학이 공개한 <b>선행학습 영향평가 결과보고서</b>를 반드시 함께 보십시오.</p></div>' +
+'    <div class="note tip"><span class="t">고치는 법</span><p><kbd>문항은행/01_유형별.md</kbd> 와 <kbd>02_전공별.md</kbd> 를 고치고 <b>새로 고침</b>만 하면 됩니다. 면은 저절로 다시 나뉩니다.</p></div>' +
+'  </div>' +
+'  <div class="foot"><span>면접 문항 은행</span><span class="pg"></span></div>' +
+'</div>';
+  }
+
+  Promise.all(BOOKS.map(function (b) {
+    return fetch(b.file + '?v=' + Date.now()).then(function (r) {
+      if (!r.ok) throw new Error(b.file + ' — ' + r.status);
+      return r.text();
+    }).then(function (t) {
+      return { title: b.title, part: b.part, path: b.path, foot: b.foot, groups: parse(t) };
+    });
+  })).then(function (books) {
+    var total = books.reduce(function (n, b) {
+      return n + b.groups.reduce(function (m, g) { return m + g.items.length; }, 0);
+    }, 0);
+    document.getElementById('doc').innerHTML = cover(total);
+    document.getElementById('count').textContent = total + '문항';
+    buildBank(books);
+  }).catch(function (e) {
+    document.getElementById('doc').innerHTML =
+      '<div class="page"><div class="body"><h3 class="sh">문항을 불러오지 못했습니다</h3>' +
+      '<p>' + e.message + '</p><p>이 파일은 <b>localhost</b> 로 열어야 합니다. ' +
+      'file:// 로 열면 문항 파일을 읽지 못합니다.</p></div></div>';
+  });
+})();
+</script>
+</body>
+</html>
