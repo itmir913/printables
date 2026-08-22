@@ -34,7 +34,7 @@
   w.paginate = paginate;
   w.setScope = setScope;
 
-  /* 조각을 나중에 붙이는 경우(index.html)에는 붙인 뒤 paginate() 를 부른다 */
+  /* 조각을 나중에 붙이는 경우에는 붙인 뒤 paginate() 를 부른다 */
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', paginate);
   else paginate();
 })(window, document);

@@ -68,7 +68,7 @@ tailwind.config = {
 <script>
 /* parts/ 를 순서대로 불러 조립한다.
    fetch 라서 localhost 로 열어야 한다. file:// 로 열면 조각을 못 읽는다.
-   배부본은 `node build.js` 로 만든 단일 파일을 쓴다. */
+   배부본은 `node 가이드북빌드.js` 로 만든 단일 파일을 쓴다. */
 (function () {
   var PARTS = [
     'parts/00_표지차례.html',
@@ -92,7 +92,7 @@ tailwind.config = {
     document.getElementById('doc').innerHTML =
       '<div class="page"><div class="body"><h3 class="sh">조각을 불러오지 못했습니다</h3>' +
       '<p>' + e.message + '</p><p>이 파일은 <b>localhost</b> 로 열어야 합니다. ' +
-      'file:// 로 열었다면 개발 서버로 다시 여시거나, <kbd>node build.js</kbd> 산출물을 쓰세요.</p></div></div>';
+      'file:// 로 열었다면 개발 서버로 다시 여십시오.</p></div></div>';
   });
 })();
 </script>

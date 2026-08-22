@@ -1,8 +1,8 @@
-/* parts/ 조각을 index.html 틀에 부어 단일 파일을 만든다.
+/* parts/ 조각을 면접지도가이드북.html 틀에 부어 단일 파일을 만든다.
  *
- *   node build.js            →  _배부용/면접지도가이드북.html
+ *   node 가이드북빌드.js       →  _배부용/면접지도가이드북.html
  *
- * 평소 작업에는 필요 없다. index.html 을 localhost 로 열면 그만이다.
+ * 평소 작업에는 필요 없다. 면접지도가이드북.html 을 localhost 로 열면 그만이다.
  * 이 스크립트는 파일 하나로 다른 사람에게 건네야 할 때만 쓴다.
  * 산출물은 style.css 와 app.js 를 안에 품는다. 그래야 파일 하나만 건네도 열린다.
  * (원고에는 style="..." 을 쓰지 않는다. 여기서 <style> 로 묶는 것은 빌드 산출물의
@@ -31,7 +31,7 @@ function read(p) {
   return fs.readFileSync(path.join(DIR, p), 'utf8');
 }
 
-let html = read('index.html');
+let html = read('면접지도가이드북.html');
 const css = read('style.css');
 const js = read('app.js');
 
@@ -50,7 +50,7 @@ const body = PARTS.map(function (f) {
 /* 1. 조각 삽입 — 로더 스크립트를 통째로 갈아 끼운다 */
 const DOC_RE = /<!--BUILD:DOC-->[\s\S]*?<!--\/BUILD:DOC-->/;
 if (!DOC_RE.test(html)) {
-  console.error('index.html 에서 BUILD:DOC 표시를 찾지 못했습니다.');
+  console.error('면접지도가이드북.html 에서 BUILD:DOC 표시를 찾지 못했습니다.');
   process.exit(1);
 }
 html = html.replace(DOC_RE, body);

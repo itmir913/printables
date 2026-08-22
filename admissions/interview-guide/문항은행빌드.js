@@ -55,7 +55,7 @@ const stamp = today.getFullYear() + '. ' + (today.getMonth() + 1) + '. ' + today
 const css = fs.readFileSync(path.join(DIR, 'style.css'), 'utf8');
 const app = fs.readFileSync(path.join(DIR, 'app.js'), 'utf8');
 const bank = fs.readFileSync(path.join(DIR, 'bank.js'), 'utf8');
-const tw = fs.readFileSync(path.join(DIR, 'index.html'), 'utf8')
+const tw = fs.readFileSync(path.join(DIR, '면접지도가이드북.html'), 'utf8')
   .match(/<script src="https:\/\/cdn\.tailwindcss\.com"><\/script>[\s\S]*?<\/script>/)[0];
 
 const cover = `
