@@ -394,13 +394,13 @@ table.t .nowrap{ white-space:nowrap; }
    꼭지가 끝날 때마다 붙인다. 시간 없는 사람은 이것만 읽어도 되게.
    margin-top:auto 라서 면의 맨 아래에 저절로 내려가 붙는다. */
 .sum{
-  /* 면 바닥에 못박지 않는다. 꼭지가 끝나는 자리에 그냥 놓인다.
-     모든 면에 있어야 하는 것도 아니다 — 없는 면이 있어도 된다. */
-  margin-top:1.2mm;
+  /* 면 바닥에 붙인다. 다만 모든 면에 있어야 하는 것은 아니다.
+     여러 면에 걸친 묶음은 묶음이 끝나는 자리에서 한 면을 통째로 쓴다. */
+  margin-top:auto;
   border-top:.7mm solid var(--ink); border-bottom:.7mm solid var(--ink);
   padding:1.5mm 0 1.3mm;
 }
-.sum.bottom{ margin-top:auto; }           /* 굳이 면 바닥에 붙이고 싶을 때만 */
+.note.bottom{ margin-top:auto; }           /* 묶음 정리 면의 맺음말을 바닥에 */
 .sum .st{
   display:block; font-size:12pt; font-weight:800; color:var(--ink);
   letter-spacing:.16em; margin-bottom:1.4mm;
