@@ -77,7 +77,8 @@ tailwind.config = {
     'parts/03_인적성.html',
     'parts/04_특수.html',
     'parts/05_제시문.html',
-    'parts/06_부록.html'
+    'parts/06_예시.html',
+    'parts/07_부록.html'
   ];
   Promise.all(PARTS.map(function (p) {
     return fetch(p + '?v=' + Date.now()).then(function (r) {

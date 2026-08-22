@@ -427,3 +427,26 @@ table.t .nowrap{ white-space:nowrap; }
 
 /* 차례를 두 단으로 */
 .toc.cols{ display:grid; grid-template-columns:1fr 1fr; gap:4mm 7mm; align-content:start; }
+
+/* ---------------------------------------------------- 답변 예시 묶음
+   기록 → 나올 질문 → 잘못된 답 → 잘한 답 → 무엇이 갈랐나.
+   색 없이 위쪽 굵은 선으로 한 묶음을 끊는다. */
+.ex{ border-top:.55mm solid var(--ink); padding-top:1.8mm; }
+.ex + .ex{ margin-top:1.6mm; }
+.ex .rec{
+  display:block; font-size:12.5pt; font-weight:800; color:var(--ink);
+  margin-bottom:1.4mm; line-height:1.35;
+}
+.ex .rec::before{ content:'기록 — '; color:var(--mute); font-weight:700; }
+.ex .qs{ list-style:none; margin-bottom:1.6mm; }
+.ex .qs li{
+  position:relative; padding-left:6.5mm; margin-bottom:.8mm;
+  font-size:12pt; color:var(--sub);
+}
+.ex .qs li:last-child{ margin-bottom:0; }
+.ex .qs li::before{
+  content:'Q.'; position:absolute; left:0; top:0;
+  font-weight:800; color:var(--ink); font-size:12pt;
+}
+.ex .why{ margin-top:1.4mm; }
+.ex .why::before{ content:'무엇이 갈랐나 — '; font-weight:800; color:var(--ink); }

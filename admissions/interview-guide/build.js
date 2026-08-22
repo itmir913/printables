@@ -20,7 +20,8 @@ const PARTS = [
   '03_인적성.html',
   '04_특수.html',
   '05_제시문.html',
-  '06_부록.html'
+  '06_예시.html',
+  '07_부록.html'
 ];
 
 function read(p) {
