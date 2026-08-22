@@ -107,7 +107,7 @@ th, td, h1, h2, h3, h4, h5, h6{ font-family:var(--font); }
 }
 
 /* ---------------------------------------------------- 본문 흐름 */
-.body{ flex:1; min-height:0; display:flex; flex-direction:column; gap:2.6mm; }
+.body{ flex:1; min-height:0; display:flex; flex-direction:column; gap:2.2mm; }
 .body.two{ flex-direction:row; gap:7mm; }
 .body.two > *{ flex:1; min-width:0; }
 .body.two .col{ display:flex; flex-direction:column; gap:5mm; }
@@ -128,7 +128,7 @@ em,i{ font-style:italic; }
 h3.sh{
   font-size:14.5pt; font-weight:800; color:var(--ink);
   border-left:1.6mm solid var(--ink); padding-left:3mm;
-  margin-bottom:1.3mm; line-height:1.25;
+  margin-bottom:1.1mm; line-height:1.25;
 }
 h4.sh2{
   font-size:13.5pt; font-weight:700; color:var(--ink);
@@ -201,12 +201,12 @@ kbd{
 table.t{ width:100%; border-collapse:collapse; font-size:12pt; }
 table.t th{
   background:var(--fill-2); color:var(--ink); font-weight:800;
-  text-align:left; padding:1.3mm 2.2mm;
+  text-align:left; padding:1.2mm 2.1mm;
   border-top:.6mm solid var(--ink); border-bottom:.6mm solid var(--ink);
   white-space:nowrap;
 }
 table.t td{
-  padding:1.3mm 2.2mm; color:var(--body);
+  padding:1.2mm 2.1mm; color:var(--body);
   border-bottom:1px solid var(--line); vertical-align:top;
 }
 table.t tr:last-child td{ border-bottom:.6mm solid var(--ink); }
@@ -318,7 +318,7 @@ body.only-student .page:not(.sheet){ display:none !important; }
 /* 실제 기출이 아니라 유형을 보여주려고 새로 지은 예시다 */
 .qbox{
   border:1px solid var(--line-2); border-top:.6mm solid var(--ink);
-  padding:2mm 2.6mm; font-size:12.5pt;
+  padding:1.8mm 2.4mm; font-size:12.5pt;
 }
 .qbox .qt{
   display:block; font-weight:800; color:var(--ink);
@@ -344,7 +344,7 @@ body.only-student .page:not(.sheet){ display:none !important; }
 .flow .step.end{ border-width:.5mm; border-color:var(--ink); }
 .flow .arrow{
   align-self:center; font-weight:800; color:var(--ink);
-  line-height:1; padding:.5mm 0; font-size:12pt;
+  line-height:1; padding:.3mm 0; font-size:12pt;
 }
 .flow .branch{ display:flex; gap:3mm; }
 .flow .branch > *{ flex:1; min-width:0; }
@@ -352,7 +352,7 @@ body.only-student .page:not(.sheet){ display:none !important; }
 /* ---------------------------------------------------- 좌우 대비 */
 /* 고쳐야 할 말 / 고친 말 처럼 마주 놓고 보여줄 때 */
 .vs{ display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line-2); }
-.vs > div{ padding:2mm 2.6mm; font-size:12.5pt; color:var(--sub); }
+.vs > div{ padding:1.8mm 2.4mm; font-size:12.5pt; color:var(--sub); }
 .vs > div + div{ border-left:1px solid var(--line-2); }
 .vs .h{
   display:block; font-weight:800; color:var(--ink); font-size:13pt;
@@ -396,7 +396,7 @@ table.t .nowrap{ white-space:nowrap; }
 .sum{
   margin-top:auto;
   border-top:.7mm solid var(--ink); border-bottom:.7mm solid var(--ink);
-  padding:1.7mm 0 1.5mm;
+  padding:1.5mm 0 1.3mm;
 }
 .sum.inline{ margin-top:0; }              /* 면 중간에 두어야 할 때 */
 .sum .st{
