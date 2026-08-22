@@ -129,7 +129,13 @@ h3.sh{
   font-size:14.5pt; font-weight:800; color:var(--ink);
   border-left:1.6mm solid var(--ink); padding-left:3mm;
   margin-bottom:1.1mm; line-height:1.25;
+  /* 주제가 바뀌는 자리다. 앞 주제와 한 줄쯤 떼어 놓는다.
+     다만 면의 첫 소제목은 머리말 바로 아래이므로 떼지 않는다. */
+  margin-top:4mm;
 }
+.body > h3.sh:first-child,
+.col  > h3.sh:first-child,
+.lead + h3.sh{ margin-top:0; }
 h4.sh2{
   font-size:13.5pt; font-weight:700; color:var(--ink);
   padding-bottom:1mm; margin-bottom:1.5mm;
@@ -455,3 +461,31 @@ table.t .nowrap{ white-space:nowrap; }
 }
 .ex .why{ margin-top:1.4mm; }
 .ex .why::before{ content:'무엇이 갈랐나 — '; font-weight:800; color:var(--ink); }
+
+/* ============================================================
+   문항 은행 (별책) — bank.js 가 조판한다
+   ============================================================ */
+.qcols{
+  flex:1; min-height:0;
+  display:grid; grid-template-columns:1fr 1fr; gap:0 6mm;
+  align-items:stretch;
+}
+.qcol{ height:100%; overflow:hidden; }
+.qcol + .qcol{ border-left:1px solid var(--line); padding-left:6mm; }
+
+h4.sh2.qh{ margin-top:3mm; }
+.qcol > h4.sh2.qh:first-child{ margin-top:0; }
+h4.sh2.qh .qn{
+  float:right; font-size:12pt; font-weight:700; color:var(--mute);
+}
+h4.sh2.qh.cont .qn{ font-style:normal; }
+
+ul.qlist{ list-style:none; margin-bottom:1mm; }
+ul.qlist li{
+  position:relative; padding-left:4.5mm; margin-bottom:1.6mm;
+  font-size:12pt; line-height:1.38; color:var(--body);
+}
+ul.qlist li::before{
+  content:''; position:absolute; left:0; top:2.2mm;
+  width:2.4mm; height:.4mm; background:var(--line-2);
+}
