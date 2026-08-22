@@ -4,7 +4,7 @@
  *
  * 평소 작업에는 필요 없다. 면접지도가이드북.html 을 localhost 로 열면 그만이다.
  * 이 스크립트는 파일 하나로 다른 사람에게 건네야 할 때만 쓴다.
- * 산출물은 style.css 와 app.js 를 안에 품는다. 그래야 파일 하나만 건네도 열린다.
+ * 산출물은 style.css 와 공통.js 를 안에 품는다. 그래야 파일 하나만 건네도 열린다.
  * (원고에는 style="..." 을 쓰지 않는다. 여기서 <style> 로 묶는 것은 빌드 산출물의
  *  이야기이지 원고의 이야기가 아니다.)
  */
@@ -33,7 +33,7 @@ function read(p) {
 
 let html = read('면접지도가이드북.html');
 const css = read('style.css');
-const js = read('app.js');
+const js = read('공통.js');
 
 /* 조각을 순서대로 잇는다 */
 const missing = PARTS.filter(function (f) {
@@ -57,7 +57,7 @@ html = html.replace(DOC_RE, body);
 
 /* 2. 스타일시트와 스크립트를 품는다 */
 html = html.replace('<link rel="stylesheet" href="style.css">', '<style>\n' + css + '\n</style>');
-html = html.replace('<script src="app.js"></script>', '<script>\n' + js + '\n</script>');
+html = html.replace('<script src="공통.js"></script>', '<script>\n' + js + '\n</script>');
 
 fs.mkdirSync(OUTDIR, { recursive: true });
 fs.writeFileSync(OUT, html, 'utf8');
