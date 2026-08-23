@@ -108,11 +108,17 @@ th, td, h1, h2, h3, h4, h5, h6{ font-family:var(--font); }
 
 /* ---------------------------------------------------- 본문 흐름 */
 .body{ flex:1; min-height:0; display:flex; flex-direction:column; gap:2mm; }
-.body.two{ flex-direction:row; gap:7mm; }
-.body.two > *{ flex:1; min-width:0; }
-.body.two .col{ display:flex; flex-direction:column; gap:5mm; }
-.body.narrow-l.two > :first-child{ flex:.72; }
-.body.wide-l.two   > :first-child{ flex:1.45; }
+
+/* 본문 안에서 두 칸으로 가르는 자리(.duo).
+   `.body` 를 겹쳐 쓰면 안 된다. `.body` 는 면 본문이라 flex:1 로
+   면 높이를 채우게 되어 있어서, 중첩하면 그 flex:1 까지 물려받아
+   남는 세로를 전부 빨아들인다. 둘을 겹쳐 놓으면 반씩, 넷이면 넷이
+   똑같이 나눠 갖는다. 그래서 이름을 따로 세운다. */
+.duo{ display:flex; flex-direction:row; gap:7mm; }
+.duo > *{ flex:1; min-width:0; }
+.duo .col{ display:flex; flex-direction:column; gap:5mm; }
+.duo.narrow-l > :first-child{ flex:.72; }
+.duo.wide-l   > :first-child{ flex:1.45; }
 
 /* 본문 서술은 기준 크기(12pt = text-base)를 그대로 쓴다.
    종이는 화면보다 가까이서 보고 해상도가 높아 12pt 면 충분히 크다. */
@@ -486,7 +492,7 @@ table.t .nowrap{ white-space:nowrap; }
   display:block; font-size:12.5pt; font-weight:800; color:var(--ink);
   margin-bottom:1.4mm; line-height:1.35;
 }
-.ex .rec::before{ content:'기록 — '; color:var(--mute); font-weight:700; }
+.ex .rec::before{ content:'생기부 기록 — '; color:var(--mute); font-weight:700; }
 /* 묶음의 머리가 학생부 기록이 아닐 때 — 면접관이 던지는 문항이거나 상황이다 */
 .ex.q .rec::before{ content:'문항 — '; }
 .ex.s .rec::before{ content:'상황 — '; }
