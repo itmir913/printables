@@ -196,6 +196,15 @@ kbd{
 .note.tip{ border-left-style:dashed; border-left-width:1.2mm; background:#fff; }
 .note.tip .t::before{ content:'● 팁 — '; }
 
+/* 대학별로 달라 반드시 확인해야 하는 것.  공통 원칙(.note)과 눈으로 갈린다.
+   좌측 굵은 점선 + 사면 실선 테두리 + 「대학별 확인」 말머리. */
+.note.univ{
+  border:.35mm solid var(--ink);
+  border-left:1.4mm dotted var(--ink); background:#fff;
+}
+.note.univ .t::before{ content:'◇ 대학별 확인 — '; }
+.note ul.dots{ color:var(--sub); margin-top:1.4mm; }
+
 .note.quote{
   border:none; border-left:.5mm solid var(--line-2);
   background:none; font-style:normal; color:var(--sub);
@@ -263,6 +272,14 @@ table.t.ruled tr:last-child td{ border-bottom:1px solid var(--line-2); }
 .eg{
   display:block; font-size:12pt; font-weight:400; line-height:1.32;
   color:var(--faint);
+}
+
+/* 답변 틀에서 학생이 채우는 자리.  외우는 말(굵은 글씨)과 눈으로 갈린다.
+   실제로 손으로 쓰는 칸이 아니므로 .wl 이 아니라 이것을 쓴다. */
+.blank{
+  display:inline-block; padding:0 1.4mm;
+  background:var(--fill); border-bottom:.35mm solid var(--line-2);
+  color:var(--mute); font-weight:400;
 }
 
 .chk{ display:inline-flex; align-items:center; gap:1.5mm; margin-right:4mm; font-size:12.5pt; }
