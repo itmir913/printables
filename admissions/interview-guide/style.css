@@ -308,7 +308,7 @@ table.t.ruled tr:last-child td{ border-bottom:1px solid var(--line-2); }
 .cover .kicker{ font-size:12pt; font-weight:700; letter-spacing:.32em; color:var(--sub); margin-bottom:10mm; }
 .cover h1{ font-size:34pt; font-weight:800; letter-spacing:-.035em; line-height:1.24; color:var(--ink); }
 .cover hr{ width:34mm; height:1.4mm; background:var(--ink); border:none; margin:9mm auto; }
-.cover .sub{ font-size:15pt; color:var(--sub); margin-bottom:22mm; }
+.cover .sub{ font-size:15pt; color:var(--sub); margin-bottom:5mm; }
 /* 날짜와 저작자는 표지에서 힘을 빼고 흐리게 둔다. 상자를 치지 않는다. */
 .cover .meta{ display:flex; gap:4mm; justify-content:center; flex-wrap:wrap; }
 .cover .meta span{ font-size:12.5pt; color:var(--mute); letter-spacing:.01em; }
