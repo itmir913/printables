@@ -63,7 +63,7 @@
     book.groups.forEach(function (g, gi) {
       var title = book.title;
       if (gi === 0) newPage(title, false);
-      /* 갈래가 바뀌면 소제목을 놓는다 */
+      /* 유형이 바뀌면 소제목을 놓는다 */
       var h = el('h4', 'sh2 qh', g.name +
         ' <span class="qn">' + g.items.length + '</span>');
       put(h, title);

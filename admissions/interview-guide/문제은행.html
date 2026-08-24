@@ -29,6 +29,53 @@ tailwind.config = {
 
 <div id="doc"></div>
 
+<!-- 표지와 「쓰는 법」 면.  이 마크업이 원본이다.
+     문제은행빌드.js 도 이 template 을 읽어 가므로 사본이 없다.
+     기준일은 아래 <span> 에 손으로 적는다 — 문항을 손댄 날이지 인쇄한 날이 아니다.
+     {{문항수}} 한 자리만 기계가 채운다. -->
+<template id="앞면">
+<div class="page cover">
+  <div class="kicker">면접 지도 가이드북 별책</div>
+  <h1>면접 문제 은행</h1>
+  <hr>
+  <div class="sub">유형별 · 전공별로 묶은 면접 문항 {{문항수}}개</div>
+  <div class="meta">
+    <span>2026. 8. 24. 기준</span>
+    <span><b>@luminousky</b></span>
+  </div>
+</div>
+
+<div class="page">
+  <div class="head">
+    <div class="ttl"><span class="no">쓰는 법</span><h2>이 문항을 어떻게 쓰는가</h2></div>
+    <span class="path">별책</span>
+  </div>
+  <div class="body">
+    <p class="lead">교육청 자료집·대학 공개 자료·후기 자료집에 공개된 기출 문항을 모아 중복을 제거하고 다듬었습니다. 대학·학교·개인을 특정하는 표현은 삭제했습니다.</p>
+
+    <h3 class="sh">외우게 하지 마십시오</h3>
+    <p>여기 있는 문항이 그대로 나오지 않습니다. 쓸모는 <b>유형을 익히는 데</b> 있습니다. 학생이 자기 학생부로 <b>같은 유형의 문항을 스스로 만들게</b> 하는 것이 목적입니다.</p>
+
+    <h3 class="sh">이렇게 씁니다</h3>
+    <ol class="steps">
+      <li><b>학생이 고르게 합니다.</b> 자기 계열과 해당하는 유형을 펼쳐 놓고, 답할 수 있는 것과 막히는 것을 표시하게 합니다.</li>
+      <li><b>막히는 것부터</b> 준비시킵니다. 답할 수 있는 것은 이미 준비된 것입니다.</li>
+      <li><b>모의면접 문항지</b>를 여기서 뽑습니다. 공통 유형에서 셋, 계열에서 둘, 학생부에서 셋.</li>
+      <li>고른 문항마다 <b>꼬리질문</b>을 하나씩 붙여 보게 합니다. 그것까지가 준비입니다.</li>
+    </ol>
+
+    <h3 class="sh">유형마다 개수가 다릅니다</h3>
+    <p>일부러 맞추지 않았습니다. <b>실제 기출의 분포를 그대로 둔 것</b>입니다. 예를 들어 자기소개와 마지막 할 말은 모아 놓고 보면 다른 유형의 절반도 되지 않습니다. 그만큼 <b>덜 묻는다</b>는 뜻입니다. 반대로 세특·탐구와 시사·윤리 쟁점은 서로 다른 질문이 계속 나옵니다.</p>
+    <p>없는 문항을 지어내 채우지 않았습니다. 여기 있는 것은 전부 실제로 나온 질문을 다듬은 것입니다.</p>
+
+    <div class="note warn"><span class="t">해마다 바뀝니다</span><p>대학의 면접 문항은 해마다 달라집니다. 이 은행은 <b>지난 기출을 모은 것</b>이지 올해 나올 문항이 아닙니다. 지원 대학이 공개한 <b>선행학습 영향평가 결과보고서</b>를 반드시 함께 보십시오.</p></div>
+
+    <div class="note tip"><span class="t">보이지 않는 자리는 묻지 않습니다</span><p>수상경력·개인 봉사활동 실적·자율동아리·독서활동상황은 <b>대입에 제공되지 않습니다.</b> 여기 실린 독서·수상 유형의 문항은 <b>세특과 창체 특기사항에 서술된</b> 책과 대회 준비 과정을 두고 묻는 것으로 읽으십시오.</p></div>
+  </div>
+  <div class="foot"><span>면접 문제 은행</span><span class="pg"></span></div>
+</div>
+</template>
+
 <script src="문제은행조판.js"></script>
 <script src="공통.js"></script>
 <script>
@@ -38,7 +85,7 @@ tailwind.config = {
 (function () {
   var BOOKS = [
     { file: '문제은행/01_유형별.md', title: '유형별 문항', part: '유형별',
-      path: '갈래로 묶은 것', foot: '면접 문제 은행 · 유형별' },
+      path: '유형으로 묶은 것', foot: '면접 문제 은행 · 유형별' },
     { file: '문제은행/02_전공별.md', title: '전공·계열별 문항', part: '전공별',
       path: '계열로 묶은 것', foot: '면접 문제 은행 · 전공별' }
   ];
@@ -60,40 +107,10 @@ tailwind.config = {
     return groups.filter(function (g) { return g.items.length; });
   }
 
+  /* 표지와 「쓰는 법」 면 — 마크업은 위 <template id="앞면"> 이 원본이다 */
   function cover(total) {
-    var d = new Date();
-    var stamp = d.getFullYear() + '. ' + (d.getMonth() + 1) + '. ' + d.getDate() + '.';
-    return '' +
-'<div class="page cover">' +
-'  <div class="kicker">면접 지도 가이드북 별책</div>' +
-'  <h1>면접 문제 은행</h1>' +
-'  <hr>' +
-'  <div class="sub">유형별 · 전공별로 묶은 면접 문항 ' + total + '개</div>' +
-'  <div class="meta"><span>' + stamp + ' 기준</span><span><b>@luminousky</b></span></div>' +
-'</div>' +
-'<div class="page">' +
-'  <div class="head">' +
-'    <div class="ttl"><span class="no">쓰는 법</span><h2>이 문항을 어떻게 쓰는가</h2></div>' +
-'    <span class="path">별책</span>' +
-'  </div>' +
-'  <div class="body">' +
-'    <p class="lead">교육청 자료집·대학 공개 자료·후기 자료집에 공개된 기출 문항을 모아 중복을 제거하고 다듬었습니다. 대학·학교·개인을 특정하는 표현은 삭제했습니다.</p>' +
-'    <h3 class="sh">외우게 하지 마십시오</h3>' +
-'    <p>여기 있는 문항이 그대로 나오지 않습니다. 쓸모는 <b>결을 익히는 데</b> 있습니다. 학생이 자기 학생부로 <b>같은 결의 문항을 스스로 만들게</b> 하는 것이 목적입니다.</p>' +
-'    <h3 class="sh">이렇게 씁니다</h3>' +
-'    <ol class="steps">' +
-'      <li><b>학생이 고르게 합니다.</b> 자기 계열과 해당하는 갈래를 펼쳐 놓고, 답할 수 있는 것과 막히는 것을 표시하게 합니다.</li>' +
-'      <li><b>막히는 것부터</b> 준비시킵니다. 답할 수 있는 것은 이미 준비된 것입니다.</li>' +
-'      <li><b>모의면접 문항지</b>를 여기서 뽑습니다. 공통 갈래에서 셋, 계열에서 둘, 학생부에서 셋.</li>' +
-'      <li>고른 문항마다 <b>꼬리질문</b>을 하나씩 붙여 보게 합니다. 그것까지가 준비입니다.</li>' +
-'    </ol>' +
-'    <h3 class="sh">갈래마다 개수가 다릅니다</h3>' +
-'    <p>일부러 맞추지 않았습니다. <b>실제 기출의 분포를 그대로 둔 것</b>입니다. 자기소개와 마지막 할 말은 다른 갈래의 절반도 되지 않습니다. 그만큼 <b>덜 묻는다</b>는 뜻입니다. 없는 문항을 지어내 채우지 않았습니다.</p>' +
-'    <div class="note warn"><span class="t">해마다 바뀝니다</span><p>대학의 면접 문항은 해마다 달라집니다. 이 은행은 <b>지난 기출을 모은 것</b>이지 올해 나올 문항이 아닙니다. 지원 대학이 공개한 <b>선행학습 영향평가 결과보고서</b>를 반드시 함께 보십시오.</p></div>' +
-'    <div class="note tip"><span class="t">보이지 않는 자리는 묻지 않습니다</span><p>수상경력·개인 봉사활동 실적·자율동아리·독서활동상황은 <b>대입에 제공되지 않습니다.</b> 여기 실린 독서·수상 갈래의 문항은 <b>세특과 창체 특기사항에 서술된</b> 책과 대회 준비 과정을 두고 묻는 것으로 읽으십시오.</p></div>' +
-'  </div>' +
-'  <div class="foot"><span>면접 문제 은행</span><span class="pg"></span></div>' +
-'</div>';
+    return document.getElementById('앞면').innerHTML
+      .replace('{{문항수}}', total);
   }
 
   Promise.all(BOOKS.map(function (b) {
