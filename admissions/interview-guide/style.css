@@ -316,6 +316,11 @@ table.t.ruled tr:last-child td{ border-bottom:1px solid var(--line-2); }
   content:'·'; margin-right:4mm; color:var(--faint);
 }
 .cover .meta b{ font-weight:600; color:var(--mute); }
+/* 저작자 표시는 표지 아래에만 흐리게 둔다. 다른 면에는 꼬리말이 대신한다. */
+.cover .by{
+  position:absolute; left:0; right:0; bottom:14mm;
+  font-size:12pt; color:var(--faint); letter-spacing:.04em;
+}
 
 /* ---------------------------------------------------- 차례 */
 .toc{ display:flex; flex-direction:column; gap:5mm; }
