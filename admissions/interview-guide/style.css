@@ -258,7 +258,7 @@ table.t tr:last-child td{ border-bottom:.6mm solid var(--ink); }
    넓혀 가면 학생이 쓰는 칸이 그만큼 좁아지기 때문이다. */
 table.t.ruled{ table-layout:fixed; }
 table.t.ruled th, table.t.ruled td{ border:1px solid var(--line-2); overflow-wrap:break-word; }
-table.t.ruled th{ text-align:center; white-space:normal; }
+table.t.ruled th{ text-align:left; white-space:normal; }
 table.t.ruled tr:last-child td{ border-bottom:1px solid var(--line-2); }
 
 /* ---------------------------------------------------- 타일 */
@@ -437,7 +437,8 @@ table.t.mini{ font-size:12pt; }
 table.t.mini th, table.t.mini td{ padding:1.5mm 2.2mm; }
 
 /* 시간표처럼 가운데 정렬이 필요한 열 */
-table.t .c{ text-align:center; }
+/* 표는 머리칸과 본문칸을 모두 왼쪽으로 맞춘다.  가운데 정렬을 섞으면
+   머리와 본문이 어긋나 보인다 — 예전 .c 를 걷어낸 까닭이다. */
 table.t .nowrap{ white-space:nowrap; }
 
 /* ---------------------------------------------------- 낱말 묶음 */
