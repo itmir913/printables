@@ -63,6 +63,9 @@ const cover = SHELL
   .match(/<template id="앞면">([\s\S]*?)<\/template>/)[1]
   .replace('{{문항수}}', total);
 
+/* 꼬리말 왼쪽 문구도 저쪽 <body data-book="…"> 한 줄이 원본이다 */
+const BODY = SHELL.match(/<body[^>]*>/)[0];
+
 const html = `<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -74,7 +77,7 @@ ${tw}
 ${css}
 </style>
 </head>
-<body>
+${BODY}
 
 <div class="bar no-print">
   <b>면접 문제 은행</b>
@@ -92,7 +95,7 @@ ${app}
 </script>
 <script>
 buildBank(${JSON.stringify(books.map(b => ({
-  title: b.title, part: b.part, path: b.path, foot: b.foot, groups: b.groups
+  title: b.title, part: b.part, path: b.path, groups: b.groups
 })))});
 </script>
 </body>

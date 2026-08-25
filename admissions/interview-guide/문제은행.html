@@ -19,7 +19,7 @@ tailwind.config = {
 
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-book="면접 문제 은행">
 
 <div class="bar no-print">
   <b>면접 문제 은행</b>
@@ -72,7 +72,7 @@ tailwind.config = {
 
     <div class="note tip"><span class="t">보이지 않는 자리는 묻지 않습니다</span><p>수상경력·개인 봉사활동 실적·자율동아리·독서활동상황은 <b>대입에 제공되지 않습니다.</b> 여기 실린 독서·수상 유형의 문항은 <b>세특과 창체 특기사항에 서술된</b> 책과 대회 준비 과정을 두고 묻는 것으로 읽으십시오.</p></div>
   </div>
-  <div class="foot"><span>면접 문제 은행</span><span class="pg"></span></div>
+  <div class="foot"><span class="bk"></span><span class="pg"></span></div>
 </div>
 </template>
 
@@ -85,9 +85,9 @@ tailwind.config = {
 (function () {
   var BOOKS = [
     { file: '문제은행/01_유형별.md', title: '유형별 문항', part: '유형별',
-      path: '유형으로 묶은 것', foot: '면접 문제 은행 · 유형별' },
+      path: '유형으로 묶은 것' },
     { file: '문제은행/02_전공별.md', title: '전공·계열별 문항', part: '전공별',
-      path: '계열로 묶은 것', foot: '면접 문제 은행 · 전공별' }
+      path: '계열로 묶은 것' }
   ];
 
   function esc(s) {
@@ -118,7 +118,7 @@ tailwind.config = {
       if (!r.ok) throw new Error(b.file + ' — ' + r.status);
       return r.text();
     }).then(function (t) {
-      return { title: b.title, part: b.part, path: b.path, foot: b.foot, groups: parse(t) };
+      return { title: b.title, part: b.part, path: b.path, groups: parse(t) };
     });
   })).then(function (books) {
     var total = books.reduce(function (n, b) {

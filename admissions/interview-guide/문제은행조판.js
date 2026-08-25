@@ -30,8 +30,9 @@
       body.appendChild(cols);
       page.appendChild(head);
       page.appendChild(body);
+      /* 꼬리말 왼쪽은 비워 둔다.  공통.js 가 <body data-book> 문구를 박는다 */
       page.appendChild(el('div', 'foot',
-        '<span>' + book.foot + '</span><span class="pg"></span>'));
+        '<span class="bk"></span><span class="pg"></span>'));
       root.appendChild(page);
       colIndex = 0;
       col = el('div', 'qcol');
