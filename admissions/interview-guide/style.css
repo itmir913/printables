@@ -218,6 +218,22 @@ kbd{
 }
 .note.quote .t::before{ content:'“'; }
 
+/* 실제 기출의 **문항 지시문만** 짧게 따는 자리.  제시문은 싣지 않는다.
+   인용은 출처를 밝혀야 인용이 된다 — .src 를 비우고 쓰지 말 것.
+   (CLAUDE.md 「저작권 원칙」) */
+.qcite{
+  border:.35mm solid var(--line-2); border-left-width:1.4mm;
+  background:#fff; padding:2mm 3mm 1.6mm;
+}
+.qcite .q{ display:block; font-weight:700; text-indent:-4.6mm; padding-left:4.6mm; }
+.qcite .q + .q{ margin-top:1.2mm; }
+.qcite .src{
+  display:block; margin-top:1.6mm; padding-top:1.2mm;
+  border-top:1px dotted var(--line-2);
+  font-size:12pt; color:var(--mute);
+}
+.qcite .src::before{ content:'— '; }
+
 /* ---------------------------------------------------- 표 */
 /* 표는 언제나 면의 가로 폭을 다 쓴다. 학생이 손으로 쓰는 칸이 좁아지면 안 된다.
    display:table 을 못박아 두는 까닭 — Tailwind 의 유틸리티(.grid .flex .block …)와
