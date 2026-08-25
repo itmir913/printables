@@ -50,7 +50,15 @@ tailwind.config = {
 }
 </script>
 
-<link rel="stylesheet" href="style.css">
+<!--BUILD:CSS-->
+<script>
+/* 스타일도 원고와 같이 그때그때 새로 읽는다. 고치고 새로 고치면 그 자리에서
+   보여야 한다. 브라우저가 옛 style.css 를 쥐고 있으면 고쳐 놓고도 화면이
+   그대로여서, 고친 것을 다시 고치며 한참을 헤매게 된다.
+   아래 fetch 가 ?v= 를 붙이는 것과 같은 이유다. */
+document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
+</script>
+<!--/BUILD:CSS-->
 </head>
 <body data-book="면접 지도 가이드북">
 
@@ -98,6 +106,13 @@ tailwind.config = {
 </script>
 <!--/BUILD:DOC-->
 
-<script src="공통.js"></script>
+<!--BUILD:JS-->
+<script>
+/* 스크립트도 마찬가지다. 스타일시트와 같은 이유로 ?v= 를 붙인다. */
+['공통.js'].forEach(function (f) {
+  document.write('<scr' + 'ipt src="' + f + '?v=' + Date.now() + '"><\/scr' + 'ipt>');
+});
+</script>
+<!--/BUILD:JS-->
 </body>
 </html>

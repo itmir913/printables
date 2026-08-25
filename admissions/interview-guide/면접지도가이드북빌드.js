@@ -55,9 +55,17 @@ if (!DOC_RE.test(html)) {
 }
 html = html.replace(DOC_RE, body);
 
-/* 2. 스타일시트와 스크립트를 품는다 */
-html = html.replace('<link rel="stylesheet" href="style.css">', '<style>\n' + css + '\n</style>');
-html = html.replace('<script src="공통.js"></script>', '<script>\n' + js + '\n</script>');
+/* 2. 스타일시트와 스크립트를 품는다 — 로더째로 갈아 끼운다.
+      원본은 ?v= 를 붙여 그때그때 새로 읽지만, 산출물은 파일 하나로 건네는 것이라
+      부를 바깥 파일이 없다. 그래서 로더를 지우고 내용을 그 자리에 붓는다. */
+const CSS_RE = /<!--BUILD:CSS-->[\s\S]*?<!--\/BUILD:CSS-->/;
+const JS_RE  = /<!--BUILD:JS-->[\s\S]*?<!--\/BUILD:JS-->/;
+if (!CSS_RE.test(html) || !JS_RE.test(html)) {
+  console.error('면접지도가이드북.html 에서 BUILD:CSS · BUILD:JS 표시를 찾지 못했습니다.');
+  process.exit(1);
+}
+html = html.replace(CSS_RE, '<style>\n' + css + '\n</style>');
+html = html.replace(JS_RE, '<script>\n' + js + '\n</script>');
 
 fs.mkdirSync(OUTDIR, { recursive: true });
 fs.writeFileSync(OUT, html, 'utf8');
