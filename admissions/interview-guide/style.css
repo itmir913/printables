@@ -558,3 +558,6 @@ ul.qlist li::before{
   content:''; position:absolute; left:0; top:2.2mm;
   width:2.4mm; height:.4mm; background:var(--line-2);
 }
+
+/* 세로 스크롤바를 늘 띄워, 내용 길이가 바뀌어도 화면이 옆으로 밀리지 않게 한다. */
+html { overflow-y: scroll; }
