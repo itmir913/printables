@@ -1,0 +1,44 @@
+/* 원고 면 — 새 자료가 자기 면 양식을 만들기 전에 쓰는 기본 A4 세로 면.
+ *
+ * 이미 자기 .page 양식이 있는 자료는 이 파일을 열지 않는다.
+ * 흑백 인쇄 기준이다. 색으로 정보를 나누지 않고, 본문은 12pt 아래로 내리지 않는다.
+ */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css");
+
+@page{ size:A4 portrait; margin:0; }
+
+html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+body{ margin:0; }
+
+.page.manuscript{
+  position:relative; box-sizing:border-box;
+  width:210mm; height:297mm; overflow:hidden;
+  padding:16mm 18mm 18mm;
+  background:#fff; color:#111;
+  font:12pt/1.6 "Pretendard Variable", Pretendard, "Noto Sans KR", sans-serif;
+  word-break:keep-all; overflow-wrap:break-word;
+  break-after:page;
+}
+.page.manuscript:last-child{ break-after:auto; }
+@media screen{
+  .page.manuscript{ box-shadow:0 8px 24px rgba(0,0,0,.14); }
+}
+
+.manuscript h1{ font-size:24pt; line-height:1.25; margin:0 0 6mm; padding-bottom:3mm; border-bottom:.8mm solid #111; }
+.manuscript h2{ font-size:16pt; line-height:1.3; margin:8mm 0 3mm; padding-bottom:1.5mm; border-bottom:.3mm solid #111; }
+.manuscript h3{ font-size:13pt; margin:5mm 0 2mm; }
+.manuscript h1:first-child, .manuscript h2:first-child, .manuscript h3:first-child{ margin-top:0; }
+.manuscript p{ margin:0 0 3mm; }
+.manuscript ul, .manuscript ol{ margin:0 0 3mm; padding-left:6mm; }
+.manuscript li{ margin:0 0 1mm; }
+.manuscript blockquote{ margin:0 0 3mm; padding:1mm 0 1mm 4mm; border-left:1.2mm solid #111; }
+.manuscript table{ width:100%; border-collapse:collapse; margin:0 0 4mm; }
+.manuscript th, .manuscript td{ border:.25mm solid #444; padding:1.6mm 2.4mm; text-align:left; vertical-align:top; }
+.manuscript th{ background:#f0f0f0; }
+.manuscript hr{ border:none; border-top:.25mm solid #888; margin:5mm 0; }
+.manuscript code{ font-family:inherit; background:#f0f0f0; padding:0 1mm; }
+.manuscript img{ max-width:100%; }
+
+/* 표지 — 원고 첫 줄을 `<!-- page cover -->` 로 시작하면 이 면이 된다 */
+.manuscript.cover{ display:flex; flex-direction:column; justify-content:center; }
+.manuscript.cover h1{ font-size:32pt; border-bottom-width:1.2mm; }

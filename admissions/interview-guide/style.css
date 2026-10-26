@@ -352,30 +352,6 @@ table.t.ruled tr:last-child td{ border-bottom:1px solid var(--line-2); }
 .toc .grp .pg{ color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums; }
 .toc .soon{ color:var(--faint); }
 
-/* ---------------------------------------------------- 인쇄 조작 (화면 전용) */
-.bar{
-  position:fixed; top:0; left:0; right:0; z-index:9999;
-  display:flex; align-items:center; gap:8px;
-  /* 창이 좁을 때 가운데 정렬은 왼쪽 항목을 잘라먹는다. 줄바꿈으로 받는다. */
-  justify-content:center; flex-wrap:wrap;
-  padding:8px 14px; background:rgba(20,20,20,.94); color:#fff;
-  font-family:var(--font); font-size:13px;
-}
-.bar b{ margin-right:2px; font-weight:700; color:#fff; white-space:nowrap; }
-.bar button{
-  font-family:inherit; font-size:13px; cursor:pointer;
-  padding:6px 14px; border:1px solid #666; border-radius:4px;
-  background:#2c2c2c; color:#fff;
-}
-.bar button:hover{ background:#3d3d3d; }
-.bar button[aria-pressed="true"]{ background:#fff; color:#111; border-color:#fff; font-weight:700; }
-@media screen{ body{ padding-top:96px; } }  /* 조작 막대가 두 줄로 접혀도 가리지 않게 */
-@media print{ .bar{ display:none !important; } }
-
-/* 선택 인쇄 — 화면에서도 즉시 반영되어 무엇이 나갈지 눈으로 확인된다 */
-body.only-teacher .page.sheet{ display:none !important; }
-body.only-student .page:not(.sheet){ display:none !important; }
-
 /* ============================================================
    가이드북 전용 부품
    ============================================================ */

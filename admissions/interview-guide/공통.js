@@ -1,10 +1,9 @@
 /* 두 책이 함께 쓰는 것
  *   index.html(가이드북) · ../interview-questions/index.html(문제은행)
  *
- * 하는 일 세 가지.
+ * 하는 일 두 가지.
  *   1. 면 번호를 매긴다. 손으로 적지 않으므로 면을 넣거나 빼도 저절로 맞는다.
  *   2. 꼬리말 왼쪽에 책 이름을 박는다. 모든 면이 같은 문구다.
- *   3. 인쇄 범위를 바꾼다 (전체 / 본문만 / 학생 배부용 부록만).
  */
 (function (w, d) {
   'use strict';
@@ -34,17 +33,7 @@
     });
   }
 
-  function setScope(s) {
-    d.body.classList.toggle('only-teacher', s === 'teacher');
-    d.body.classList.toggle('only-student', s === 'student');
-    ['all', 'teacher', 'student'].forEach(function (k) {
-      var b = d.getElementById('b-' + k);
-      if (b) b.setAttribute('aria-pressed', String(k === s));
-    });
-  }
-
   w.paginate = paginate;
-  w.setScope = setScope;
 
   /* 조각을 나중에 붙이는 경우에는 붙인 뒤 paginate() 를 부른다 */
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', paginate);

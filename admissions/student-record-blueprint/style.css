@@ -283,25 +283,5 @@ img.qr {
 }
 
 /* 인쇄 버튼 */
-.print-btn {
-    position: fixed;
-    top: 12px;
-    right: 12px;
-    background: #1e3a5f;
-    color: white;
-    padding: 8px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-family: inherit;
-    border: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    z-index: 9999;
-}
-
-.print-btn:hover {
-    background: #2d5282;
-}
-
 /* 세로 스크롤바를 늘 띄워, 내용 길이가 바뀌어도 화면이 옆으로 밀리지 않게 한다. */
 html { overflow-y: scroll; }

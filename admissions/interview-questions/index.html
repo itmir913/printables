@@ -10,12 +10,6 @@
 </head>
 <body data-book="면접 문제 은행">
 
-<div class="bar no-print">
-  <b>면접 문제 은행</b>
-  <span id="count">읽는 중…</span>
-  <button onclick="window.print()">인쇄</button>
-</div>
-
 <div id="doc"></div>
 
 <!-- 표지와 「쓰는 법」 면.  이 마크업이 원본이다.
@@ -69,6 +63,7 @@
    빌드하면 문항이 이 페이지 안에 들어가 dist/ 로 나간다. */
 import './문제은행조판.js';
 import '../interview-guide/공통.js';
+import { mountViewer } from '../../shared/viewer/viewer.js';
 import 유형별 from './문제은행/01_유형별.md?raw';
 import 전공별 from './문제은행/02_전공별.md?raw';
 
@@ -108,9 +103,9 @@ import 전공별 from './문제은행/02_전공별.md?raw';
     return n + b.groups.reduce(function (m, g) { return m + g.items.length; }, 0);
   }, 0);
   document.getElementById('doc').innerHTML = cover(total);
-  document.getElementById('count').textContent = total + '문항';
   buildBank(books);
 })();
+mountViewer({ title: '면접 문제 은행' });
 </script>
 </body>
 </html>

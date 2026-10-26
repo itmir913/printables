@@ -12,7 +12,11 @@ printables/
 │  ├─ index.html
 │  ├─ interview-guide/         → /printables/admissions/interview-guide/      자료
 │  └─ interview-questions/     → /printables/admissions/interview-questions/  자료
-├─ shared/                     바로가기 쪽 공통 (인쇄물은 쓰지 않는다)
+├─ shared/
+│  ├─ viewer/                  인쇄물 공용 뷰어 — 모든 자료가 연다
+│  │  ├─ viewer.js · viewer.css   조작 막대(상위·목차·면 번호·배율·단일/두 페이지·표지 별도·인쇄)
+│  │  ├─ markdown.js           .md 원고 → 면 (<!-- page --> 로 면을 나눈다)
+│  │  └─ manuscript.css        자기 면 양식이 없는 새 자료의 기본 A4 면
 │  ├─ catalog.js               공개 자료 목록 — 바로가기 쪽의 내용은 전부 여기서 나온다
 │  ├─ art.js                   카드 그림
 │  ├─ landing.js               허브·분야 쪽을 그리는 양식
@@ -26,14 +30,28 @@ printables/
   `catalog.js` 를 `landing.js` 가 그린다. 디자인은 「인쇄 교정지」 양식이다 — 흰 종이, 1px 잉크 괘선,
   네 귀퉁이의 재단선, 모노스페이스 판형 표시. 그라데이션과 흐린 장식은 두지 않는다.
   분야 팔레트는 바탕을 거의 흰 종이로 두고, 색은 글자와 `--accent` 에만 쓴다.
-- 자료 폴더는 서로 독립이다. 자기 CSS·JS 를 가지고, 다른 자료나 `shared/` 를 가져다 쓰지 않는다.
+- 자료 폴더는 서로 독립이다. 자기 CSS·JS 를 가지고, 다른 자료를 가져다 쓰지 않는다.
   (예외: 문제은행은 짝인 가이드북 폴더의 스타일을 읽는다 — 그 폴더 CLAUDE.md 참고)
+- **화면 조작은 모든 자료가 `shared/viewer/` 하나를 쓴다.** 자료마다 인쇄 단추나 조작 막대를
+  따로 두지 않는다 — 자료가 수십 개가 되어도 UX 가 갈라지지 않게 하려는 것이다.
+  면(`.page`)의 크기·생김새·면 번호는 자료가 정하고, 뷰어는 면을 늘어놓기만 한다.
+  자료 의존 기능(예: 「본문만 / 부록만」 인쇄 범위)은 뷰어에 넣지 않는다.
+  `shared/` 의 바로가기 쪽 파일(catalog·landing·art·site.css)은 여전히 인쇄물이 쓰지 않는다.
 - 자료 폴더에 CLAUDE.md 가 있으면 그 파일이 이 문서보다 우선한다.
 
 ## 넓히는 법
 
 **자료를 더할 때** (예: 진학 분야에 학종 설계도)
 1. `admissions/hakjong-blueprint/index.html` 을 만든다. 인쇄물 자체의 CSS·JS 도 그 폴더에 둔다.
+   면을 다 붙인 뒤 뷰어를 붙인다.
+   ```html
+   <script type="module">
+   import { mountViewer } from '../../shared/viewer/viewer.js';
+   mountViewer({ title: '학종 설계도' });   // back · tocFrom · cover · checkOverflow 는 viewer.js 머리 주석
+   </script>
+   ```
+   원고를 .md 로 쓰려면 `pagesFromMarkdown(원고)` 로 면을 만들고 `shared/viewer/manuscript.css` 를
+   연 뒤 `mountViewer({ checkOverflow: true })` 를 부른다. 넘친 면은 화면에 붉은 점선으로 보인다.
 2. `shared/catalog.js` 의 진학 분야 `groups[].items` 에 한 줄을 더한다 (path · tag · name · copy).
    묶음이 새로 필요하면 `groups` 에 하나를 더한다 — 분야 쪽에 섹션이 하나 생긴다.
 3. 카드 그림을 따로 그리려면 `shared/art.js` 에 함수를 더하고 `art` 에 그 이름을 적는다.

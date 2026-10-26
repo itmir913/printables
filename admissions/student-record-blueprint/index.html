@@ -10,8 +10,6 @@
 </head>
 <body>
 
-<button class="print-btn no-print" onclick="window.print()">🖨 인쇄</button>
-
 <!-- ════════════════════════════════════════
      1면 — 학종 준비 점검 + 안내
      ════════════════════════════════════════ -->
@@ -722,5 +720,9 @@
     <div class="pg-footer">4 / 4 &nbsp;|&nbsp; 학종을 여행하는 히치하이커를 위한 안내서 &nbsp;|&nbsp; © luminousky.com</div>
 </div><!-- /p4 -->
 
+<script type="module">
+import { mountViewer } from '../../shared/viewer/viewer.js';
+mountViewer({ title: '학생부종합전형 설계도' });
+</script>
 </body>
 </html>
