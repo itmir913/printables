@@ -7,18 +7,44 @@
 
 ```
 printables/
-├─ admissions/                 → /printables/admissions/          진학 분야 바로가기
-│  ├─ index.html · index.css
-│  ├─ interview-guide/         → /printables/admissions/interview-guide/
-│  └─ interview-questions/     → /printables/admissions/interview-questions/
-├─ shared/site.css             바로가기 쪽이 함께 쓰는 Tailwind 바탕
-└─ vite.config.js
+├─ index.html                  → /printables/                     허브: 모든 분야
+├─ admissions/                 → /printables/admissions/          분야 바로가기 (진학)
+│  ├─ index.html
+│  ├─ interview-guide/         → /printables/admissions/interview-guide/      자료
+│  └─ interview-questions/     → /printables/admissions/interview-questions/  자료
+├─ shared/                     바로가기 쪽 공통 (인쇄물은 쓰지 않는다)
+│  ├─ catalog.js               공개 자료 목록 — 바로가기 쪽의 내용은 전부 여기서 나온다
+│  ├─ art.js                   카드 그림
+│  ├─ landing.js               허브·분야 쪽을 그리는 양식
+│  ├─ landing.css · site.css   Tailwind 진입점과 팔레트
+└─ vite.config.js              폴더의 index.html 을 저절로 찾는다. 고치지 않는다
 ```
 
-- **분야(admissions 등) → 자료(interview-guide 등)의 3단까지만** 둔다. 자료를 다른 분야로 옮기면
-  이미 나눠 준 링크가 끊긴다. Pages 에는 서버 리디렉션이 없다.
-- 분야 폴더에는 바로가기 `index.html` 을 둔다. 디자인은 Teacher Utility Kit 홈과 같은 양식이다.
+- **허브 → 분야 → 자료의 3단까지만** 둔다. 자료를 다른 분야로 옮기면 이미 나눠 준 링크가
+  끊긴다. Pages 에는 서버 리디렉션이 없다. 폴더 이름은 영문 소문자 kebab-case 로 짓는다.
+- 바로가기 쪽(허브·분야)은 HTML 에 내용을 적지 않는다. `<body data-category="…">` 하나만 두고
+  `catalog.js` 를 `landing.js` 가 그린다. 디자인은 Teacher Utility Kit 홈과 같은 양식이다.
+- 자료 폴더는 서로 독립이다. 자기 CSS·JS 를 가지고, 다른 자료나 `shared/` 를 가져다 쓰지 않는다.
+  (예외: 문제은행은 짝인 가이드북 폴더의 스타일을 읽는다 — 그 폴더 CLAUDE.md 참고)
 - 자료 폴더에 CLAUDE.md 가 있으면 그 파일이 이 문서보다 우선한다.
+
+## 넓히는 법
+
+**자료를 더할 때** (예: 진학 분야에 학종 설계도)
+1. `admissions/hakjong-blueprint/index.html` 을 만든다. 인쇄물 자체의 CSS·JS 도 그 폴더에 둔다.
+2. `shared/catalog.js` 의 진학 분야 `groups[].items` 에 한 줄을 더한다 (path · tag · name · copy).
+   묶음이 새로 필요하면 `groups` 에 하나를 더한다 — 분야 쪽에 섹션이 하나 생긴다.
+3. 카드 그림을 따로 그리려면 `shared/art.js` 에 함수를 더하고 `art` 에 그 이름을 적는다.
+   적지 않으면 자료 이름을 적은 A4 면 그림이 들어간다.
+
+**분야를 더할 때** (예: CS 동아리)
+1. `cs-club/index.html` — `admissions/index.html` 을 복사해 `data-category` · `<title>` ·
+   description 만 바꾼다.
+2. `shared/catalog.js` 의 `CATEGORIES` 에 분야를 더한다. `tone` 은 blue · pink · violet · plum · peach
+   가운데 고른다. 허브에 섹션이, 머리 메뉴에 링크가 저절로 생긴다.
+3. 그 아래 자료는 위와 같다.
+
+`vite.config.js` 와 배포 워크플로는 고치지 않는다. 폴더에 `index.html` 이 있으면 빌드·배포에 들어간다.
 
 ## 명령
 
@@ -43,7 +69,7 @@ gh workflow run "Deploy to GitHub Pages"
 - **인쇄물**(가이드북 등)은 Tailwind 3 CDN 으로 만들어졌다. 자기 폴더의 `tailwind.css` 가
   층 없이 style.css → Preflight → 유틸리티 순으로 묶어 CDN 시절의 면을 그대로 지킨다.
   그 순서를 건드린 뒤에는 이전 커밋과 면을 대조한다 (면 수, 넘친 면, 요소 위치).
-- **바로가기 쪽**은 `shared/site.css` 를 가져오는 Tailwind 4 표준 구성이다.
+- **바로가기 쪽**은 `shared/landing.css`(→ `site.css`) 하나를 여는 Tailwind 4 표준 구성이다.
 - 진입점마다 `source(none)` + `@source` 로 자기 쪽만 훑는다. 다른 쪽의 클래스가 섞이지 않는다.
 
 ## 커밋

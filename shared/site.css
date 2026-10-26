@@ -5,7 +5,7 @@
  * 인쇄물(가이드북 등)은 이 파일을 쓰지 않는다. 그쪽은 자기 폴더의 tailwind.css 가
  * Tailwind 3 CDN 시절의 면을 그대로 지킨다.
  *
- * 진입점(각 폴더의 index.css)이 이 파일을 가져오고 @source 로 자기 쪽만 훑게 한다.
+ * 진입점은 shared/landing.css 하나다. 모든 바로가기 쪽이 그것을 연다.
  */
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css");
 @import "tailwindcss" source(none);
@@ -20,15 +20,23 @@
     --color-ink: #1d1d1f;
     --color-night: #08090f;
 
-    /* 분야별 팔레트. TUK 홈의 같은 이름 섹션과 같은 값이다. night-* 는 다크 모드 값이다. */
-    --color-admissions-bg: #f7edf2;
-    --color-admissions-ink: #44263b;
-    --color-admissions-orb: #edc4d9;
-    --color-admissions-accent: #9b4c7d;
-    --color-admissions-night-bg: #170c13;
-    --color-admissions-night-ink: #f5dde9;
-    --color-admissions-night-orb: #552a45;
-    --color-admissions-night-accent: #e48fc4;
+    /* 분야 팔레트. 값은 TUK 홈의 섹션 팔레트와 같다 (blue=수업 · pink=평가 · violet=기록 ·
+       plum=진학 · peach=행정). 분야는 catalog.js 의 tone 으로 이 가운데 하나를 고른다.
+       night-* 는 다크 모드 값이다. 팔레트를 더하면 landing.js 의 TONES 에도 한 줄 더한다. */
+    --color-blue-bg: #eef2ff;   --color-blue-ink: #202a55;   --color-blue-orb: #b8c9ff;   --color-blue-accent: #5e70d8;
+    --color-blue-night-bg: #0c1024;   --color-blue-night-ink: #e2e6ff;   --color-blue-night-orb: #26326e;   --color-blue-night-accent: #8e9cff;
+
+    --color-pink-bg: #fbf0f5;   --color-pink-ink: #472638;   --color-pink-orb: #f1c5dc;   --color-pink-accent: #a03a74;
+    --color-pink-night-bg: #1a0d14;   --color-pink-night-ink: #f8dfea;   --color-pink-night-orb: #5a2443;   --color-pink-night-accent: #f08cc0;
+
+    --color-violet-bg: #f0f1fc;   --color-violet-ink: #30294f;   --color-violet-orb: #c8c6f5;   --color-violet-accent: #6657b8;
+    --color-violet-night-bg: #100f22;   --color-violet-night-ink: #e4e1ff;   --color-violet-night-orb: #352f6e;   --color-violet-night-accent: #a597ff;
+
+    --color-plum-bg: #f7edf2;   --color-plum-ink: #44263b;   --color-plum-orb: #edc4d9;   --color-plum-accent: #9b4c7d;
+    --color-plum-night-bg: #170c13;   --color-plum-night-ink: #f5dde9;   --color-plum-night-orb: #552a45;   --color-plum-night-accent: #e48fc4;
+
+    --color-peach-bg: #f8f0e9;   --color-peach-ink: #452b20;   --color-peach-orb: #ffd0ae;   --color-peach-accent: #bb5227;
+    --color-peach-night-bg: #170e09;   --color-peach-night-ink: #fbe5d8;   --color-peach-night-orb: #5c3018;   --color-peach-night-accent: #ff9a66;
 
     --ease-brand: cubic-bezier(.16, 1, .3, 1);
 }

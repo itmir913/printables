@@ -1,0 +1,8 @@
+/* 바로가기 쪽(저장소 루트와 분야 폴더의 index.html)이 여는 스타일시트.
+   훑는 곳: 이 폴더(landing.js · art.js · catalog.js)와 바로가기 쪽의 index.html.
+   자료 폴더(한 단계 더 아래)의 index.html 은 훑지 않는다. 인쇄물은 자기 CSS 를 쓴다. */
+@import "./site.css";
+
+@source "./";
+@source "../index.html";
+@source "../*/index.html";
