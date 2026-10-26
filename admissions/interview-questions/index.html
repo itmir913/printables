@@ -12,7 +12,7 @@
 
 <div id="doc"></div>
 
-<!-- 표지와 「쓰는 법」 면.  이 마크업이 원본이다.
+<!-- 표지와 「활용 방법」 면.  이 마크업이 원본이다.
      기준일은 아래 <span> 에 손으로 적는다 — 문항을 손댄 날이지 인쇄한 날이 아니다.
      {{문항수}} 한 자리만 기계가 채운다. -->
 <template id="앞면">
@@ -29,7 +29,7 @@
 
 <div class="page">
   <div class="head">
-    <div class="ttl"><span class="no">쓰는 법</span><h2>이 문항을 어떻게 쓰는가</h2></div>
+    <div class="ttl"><span class="no">활용 방법</span><h2>이 문항을 어떻게 활용하는가</h2></div>
     <span class="path">별책</span>
   </div>
   <div class="body">
@@ -90,7 +90,7 @@ import 전공별 from './문제은행/02_전공별.md?raw';
     return groups.filter(function (g) { return g.items.length; });
   }
 
-  /* 표지와 「쓰는 법」 면 — 마크업은 위 <template id="앞면"> 이 원본이다 */
+  /* 표지와 「활용 방법」 면 — 마크업은 위 <template id="앞면"> 이 원본이다 */
   function cover(total) {
     return document.getElementById('앞면').innerHTML
       .replace('{{문항수}}', total);

@@ -72,6 +72,7 @@ printables/
 npm run dev       # 개발 서버. http://localhost:5173/printables/admissions/
 npm run build     # dist/ 생성
 npm run preview   # dist/ 를 열어 본다
+npm run prose     # 금지어 검사. 원고를 고친 뒤 돌린다. 고친 표현은 tools/prose-check.mjs 목록에 더한다
 ```
 
 폴더에 `index.html` 을 두면 저절로 빌드에 들어간다. `vite.config.js` 는 고치지 않는다.
