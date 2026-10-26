@@ -50,7 +50,6 @@ tailwind.config = {
 }
 </script>
 
-<!--BUILD:CSS-->
 <script>
 /* 스타일도 원고와 같이 그때그때 새로 읽는다. 고치고 새로 고치면 그 자리에서
    보여야 한다. 브라우저가 옛 style.css 를 쥐고 있으면 고쳐 놓고도 화면이
@@ -58,7 +57,6 @@ tailwind.config = {
    아래 fetch 가 ?v= 를 붙이는 것과 같은 이유다. */
 document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
 </script>
-<!--/BUILD:CSS-->
 </head>
 <body data-book="면접 지도 가이드북">
 
@@ -71,12 +69,11 @@ document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
   <button onclick="window.print()">인쇄</button>
 </div>
 
-<!--BUILD:DOC-->
 <div id="doc"></div>
 <script>
 /* 원고/ 를 순서대로 불러 조립한다.
    fetch 라서 localhost 로 열어야 한다. file:// 로 열면 조각을 못 읽는다.
-   배부본은 `node 면접지도가이드북빌드.js` 로 만든 단일 파일을 쓴다. */
+   배부본은 공개 주소의 이 파일이다. */
 (function () {
   var PARTS = [
     '원고/00_표지차례.html',
@@ -104,15 +101,12 @@ document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
   });
 })();
 </script>
-<!--/BUILD:DOC-->
 
-<!--BUILD:JS-->
 <script>
 /* 스크립트도 마찬가지다. 스타일시트와 같은 이유로 ?v= 를 붙인다. */
 ['공통.js'].forEach(function (f) {
   document.write('<scr' + 'ipt src="' + f + '?v=' + Date.now() + '"><\/scr' + 'ipt>');
 });
 </script>
-<!--/BUILD:JS-->
 </body>
 </html>

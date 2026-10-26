@@ -17,15 +17,13 @@ tailwind.config = {
 }
 </script>
 
-<!--BUILD:CSS-->
 <script>
 /* 스타일도 원고와 같이 그때그때 새로 읽는다. 고치고 새로 고치면 그 자리에서
    보여야 한다. 브라우저가 옛 style.css 를 쥐고 있으면 고쳐 놓고도 화면이
    그대로여서, 고친 것을 다시 고치며 한참을 헤매게 된다.
    아래 fetch 가 ?v= 를 붙이는 것과 같은 이유다. */
-document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
+document.write('<link rel="stylesheet" href="../interview-guide/style.css?v=' + Date.now() + '">');
 </script>
-<!--/BUILD:CSS-->
 </head>
 <body data-book="면접 문제 은행">
 
@@ -38,7 +36,6 @@ document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
 <div id="doc"></div>
 
 <!-- 표지와 「쓰는 법」 면.  이 마크업이 원본이다.
-     문제은행빌드.js 도 이 template 을 읽어 가므로 사본이 없다.
      기준일은 아래 <span> 에 손으로 적는다 — 문항을 손댄 날이지 인쇄한 날이 아니다.
      {{문항수}} 한 자리만 기계가 채운다. -->
 <template id="앞면">
@@ -84,14 +81,12 @@ document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
 </div>
 </template>
 
-<!--BUILD:JS-->
 <script>
 /* 스크립트도 마찬가지다. 스타일시트와 같은 이유로 ?v= 를 붙인다. */
-['문제은행조판.js', '공통.js'].forEach(function (f) {
+['문제은행조판.js', '../interview-guide/공통.js'].forEach(function (f) {
   document.write('<scr' + 'ipt src="' + f + '?v=' + Date.now() + '"><\/scr' + 'ipt>');
 });
 </script>
-<!--/BUILD:JS-->
 <script>
 /* 문제은행/*.md 를 그때그때 읽어 조판한다. 빌드가 필요 없다.
    .md 를 고치고 새로 고침만 하면 면이 다시 나뉜다.
