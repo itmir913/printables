@@ -1,6 +1,6 @@
 /*
  * 바로가기 쪽을 그린다. 쪽마다 <body data-category="…"> 하나로 무엇을 그릴지 정한다.
- *   data-category 없음 → 허브: 모든 분야를 섹션으로, 그 안에 자료 카드
+ *   data-category 없음 → 허브: 분야마다 바로가기 카드 하나. 자료는 허브에 늘어놓지 않는다
  *   data-category="id" → 그 분야: 묶음(groups)을 섹션으로, 그 안에 자료 카드
  * 내용은 catalog.js, 카드 그림은 art.js 에 있다. 이 파일은 양식만 맡는다.
  *
@@ -73,11 +73,12 @@ const card = (item, href, span, alone, solo, n) => {
     </a>`;
 };
 
-/* 섹션 하나: 재단선 안에, 모노 표시 + 큰 제목 + 한두 문장 [+ 분야 쪽으로 가는 링크] + 카드 격자 */
-const section = ({ id, title, line, tone, more }, cards, i) => {
+/* 섹션 하나: 재단선 안에, 모노 표시 + 큰 제목 + 한두 문장 + 카드 격자 */
+const section = ({ id, title, line, tone, meta }, cards, i) => {
     const n = cards.length, spans = layout(n);
     /* 판형은 자료마다 다를 수 있다. 섹션 머리에는 들어 있는 판형을 모아 적는다 */
     const paper = [...new Set(cards.map(c => c.item.paper || "A4"))].join(" · ");
+    meta = meta || `${n} sheet${n === 1 ? "" : "s"} · ${paper}`;
     return `
     <section id="${id}" aria-labelledby="${id}-h" class="relative isolate overflow-hidden border-t ${RULE_SOFT} px-4 pb-28 pt-24 ${TONES[tone] || TONES.plum} sm:px-[clamp(20px,5.5vw,88px)] sm:pb-[clamp(120px,16vh,200px)] sm:pt-[clamp(110px,15vh,170px)]">
         ${MARKS}
@@ -85,13 +86,12 @@ const section = ({ id, title, line, tone, more }, cards, i) => {
             <div class="${META} mb-5 flex items-center gap-3 opacity-55">
                 <span>§ ${String(i + 1).padStart(2, "0")}</span>
                 <span aria-hidden="true" class="h-px flex-1 bg-current opacity-30"></span>
-                <span>${n} sheet${n === 1 ? "" : "s"} · ${paper}</span>
+                <span>${meta}</span>
             </div>
             <div class="flex flex-col items-start gap-6 md:flex-row md:items-end md:justify-between">
                 <h2 id="${id}-h" class="text-[clamp(48px,14vw,76px)] font-extrabold leading-[.9] tracking-[-.05em] sm:text-[clamp(52px,8vw,104px)]">${title}</h2>
                 <div class="mb-1.5 max-w-lg md:max-w-sm">
                     <p class="break-keep text-[clamp(16px,1.35vw,19px)] leading-normal tracking-tight opacity-75">${line}</p>
-                    ${more ? `<a href="${more.href}" class="mt-3 inline-flex items-center gap-1.5 border-b border-current pb-0.5 ${META} text-(--accent)">${more.label} <span aria-hidden="true">→</span></a>` : ""}
                 </div>
             </div>
         </div>
@@ -102,12 +102,17 @@ const section = ({ id, title, line, tone, more }, cards, i) => {
 };
 
 /* 쪽에 들어갈 섹션들 */
+/* 허브는 분야로 가는 문만 둔다. 분야 하나 = 카드 하나. 자료 목록은 분야 쪽에서 본다 */
+const count = c => c.groups.reduce((n, g) => n + g.items.length, 0);
 const sections = HUB
-    ? CATEGORIES.map(c => ({
-        id: c.id, title: c.title, line: c.line, tone: c.tone,
-        more: { href: `${BASE}${c.id}/`, label: `${c.title} 자료 전체` },
-        cards: c.groups.flatMap(g => g.items.map(item => ({ item, href: `${BASE}${c.id}/${item.path}` })))
-    }))
+    ? [{
+        id: "fields", title: "분야", line: "분야를 고르면 그 분야의 자료가 모두 나옵니다.",
+        tone: CATEGORIES[0]?.tone, meta: `${CATEGORIES.length} field${CATEGORIES.length === 1 ? "" : "s"}`,
+        cards: CATEGORIES.map(c => ({
+            item: { tag: c.en, name: c.hero || c.title, copy: `${c.line.replace(/\.$/, "")} · ${count(c)}종`, art: c.art },
+            href: `${BASE}${c.id}/`
+        }))
+    }]
     : CAT ? CAT.groups.map(g => ({
         id: g.id, title: g.title, line: g.line, tone: CAT.tone,
         cards: g.items.map(item => ({ item, href: `${BASE}${CAT.id}/${item.path}` }))
@@ -117,10 +122,9 @@ const hero = HUB
     ? { kicker: "luminousky · Printables", title: "Printables", sub: "Print · Share · Coach", line: "교실에서 바로 인쇄해 쓰는 자료" }
     : CAT ? { kicker: `Printables · ${CAT.en}`, title: CAT.hero || CAT.title, sub: "Print · Share · Coach", line: CAT.line.replace(/\.$/, "") } : null;
 
-const navLinks = [
-    ...(HUB ? [] : [{ href: BASE, label: "전체" }]),
-    ...sections.map(s => ({ href: `#${s.id}`, label: s.title }))
-];
+const navLinks = HUB
+    ? CATEGORIES.map(c => ({ href: `${BASE}${c.id}/`, label: c.title }))
+    : [{ href: BASE, label: "전체" }, ...sections.map(s => ({ href: `#${s.id}`, label: s.title }))];
 
 const BTN = `rounded-md border ${RULE} px-7 py-3 text-center ${META} text-ink transition-colors duration-300 hover:bg-ink hover:text-paper dark:text-paper dark:hover:bg-paper dark:hover:text-ink`;
 const FOOT_LINK = "transition-colors duration-300 hover:text-ink dark:hover:text-paper";

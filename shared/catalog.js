@@ -1,6 +1,6 @@
 /*
  * 공개하는 자료의 목록. 바로가기 쪽은 모두 이 목록으로 그려진다.
- *   저장소 루트 index.html      → 모든 분야와 그 자료 (luminousky.com/printables/)
+ *   저장소 루트 index.html      → 분야마다 바로가기 카드 하나 (luminousky.com/printables/)
  *   분야 폴더 index.html        → 그 분야의 묶음과 자료 (luminousky.com/printables/admissions/)
  *
  * 자료를 더할 때

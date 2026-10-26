@@ -23,6 +23,8 @@ import './viewer.css';
 
 const ZOOMS = [0.5, 0.67, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
 const STORE = 'printables.viewer';
+// 이보다 좁은 창(휴대폰)에서는 두 페이지 보기를 쓰지 않는다 — viewer.css 의 같은 값과 맞춘다
+const NARROW = '(max-width: 720px)';
 
 function load() {
   try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch { return {}; }
@@ -55,8 +57,15 @@ function el(tag, attrs = {}, ...kids) {
 export function mountViewer(o = {}) {
   const pages = () => [...root.children].filter((n) => n.classList.contains('page'));
   const first = document.querySelector('.page');
-  const root = o.root || (first && first.parentElement);
+  let root = o.root || (first && first.parentElement);
   if (!root) return null;
+  /* 면이 body 에 바로 놓인 자료 — body 를 그대로 무대로 쓰면 조작 막대까지 배율과 격자에
+     휩쓸린다. 면만 따로 상자에 담는다. */
+  if (root === document.body) {
+    root = el('div', { class: 'vw-pages' });
+    first.before(root);
+    root.append(...[...document.body.children].filter((n) => n.classList.contains('page')));
+  }
 
   const saved = load();
   const st = {
@@ -70,7 +79,7 @@ export function mountViewer(o = {}) {
   root.classList.add('vw-stage');
 
   /* ── 막대 ─────────────────────────────────────── */
-  const tocBtn = el('button', { type: 'button', 'aria-expanded': 'false', 'aria-controls': 'vw-toc', title: '목차' },
+  const tocBtn = el('button', { type: 'button', 'aria-expanded': 'false', 'aria-controls': 'vw-toc', title: '목차', 'aria-label': '목차' },
     '☰', el('span', { class: 'vw-label' }, '목차'));
   const pageIn = el('input', { type: 'number', min: '1', value: '1', 'aria-label': '면 번호' });
   const pageTotal = el('span');
@@ -80,11 +89,11 @@ export function mountViewer(o = {}) {
   const btnOne = el('button', { type: 'button', 'aria-pressed': 'false' }, '단일 페이지');
   const btnTwo = el('button', { type: 'button', 'aria-pressed': 'false' }, '두 페이지');
   const coverIn = el('input', { type: 'checkbox' });
-  const coverLab = el('label', { class: 'vw-check', title: '두 페이지 보기에서 첫 면을 홀로 둔다' }, coverIn, '표지 페이지 별도 표시');
+  const coverLab = el('label', { class: 'vw-check', title: '두 페이지 보기에서 첫 면을 홀로 둔다' }, coverIn, '표지', el('span', { class: 'vw-label' }, ' 페이지'), ' 별도 표시');
 
   const bar = el('div', { class: 'vw-bar no-print', role: 'toolbar', 'aria-label': '문서 보기' },
     el('div', { class: 'vw-grp' },
-      el('a', { class: 'vw-btn', href: o.back || '../', title: '상위 페이지로' },
+      el('a', { class: 'vw-btn', href: o.back || '../', title: '상위 페이지로', 'aria-label': o.backLabel || '상위 페이지' },
         '←', el('span', { class: 'vw-label' }, o.backLabel || '상위 페이지')),
       tocBtn,
       el('span', { class: 'vw-title' }, o.title || document.title)),
@@ -96,7 +105,7 @@ export function mountViewer(o = {}) {
       zoomSel,
       el('button', { type: 'button', class: 'vw-icon', title: '확대', on: { click: () => step(1) } }, '+')),
     el('div', { class: 'vw-sep' }),
-    el('div', { class: 'vw-grp' }, el('div', { class: 'vw-seg', role: 'group', 'aria-label': '페이지 보기' }, btnOne, btnTwo), coverLab),
+    el('div', { class: 'vw-grp vw-viewopt' }, el('div', { class: 'vw-seg', role: 'group', 'aria-label': '페이지 보기' }, btnOne, btnTwo), coverLab),
     el('div', { class: 'vw-sep' }),
     el('button', { type: 'button', on: { click: () => window.print() } }, '인쇄'));
 
@@ -112,7 +121,7 @@ export function mountViewer(o = {}) {
     const ps = pages();
     if (!ps.length) return 1;
     const w = Math.max(...ps.map((p) => p.offsetWidth));   // zoom 은 offsetWidth 를 바꾸지 않는다
-    return st.two ? w * 2 + 12 : w;
+    return st.two && !matchMedia(NARROW).matches ? w * 2 + 12 : w;
   }
   function fitZoom() {
     const avail = document.documentElement.clientWidth - 32;

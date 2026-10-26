@@ -7,7 +7,7 @@
 
 ```
 printables/
-├─ index.html                  → /printables/                     허브: 모든 분야
+├─ index.html                  → /printables/                     허브: 분야마다 바로가기 하나 (자료는 늘어놓지 않는다)
 ├─ admissions/                 → /printables/admissions/          분야 바로가기 (진학)
 │  ├─ index.html
 │  ├─ interview-guide/         → /printables/admissions/interview-guide/      자료
@@ -61,7 +61,7 @@ printables/
 1. `cs-club/index.html` — `admissions/index.html` 을 복사해 `data-category` · `<title>` ·
    description 만 바꾼다.
 2. `shared/catalog.js` 의 `CATEGORIES` 에 분야를 더한다. `tone` 은 blue · pink · violet · plum · peach
-   가운데 고른다. 허브에 섹션이, 머리 메뉴에 링크가 저절로 생긴다.
+   가운데 고른다. 허브에 그 분야의 바로가기 카드가 하나 저절로 생긴다.
 3. 그 아래 자료는 위와 같다.
 
 `vite.config.js` 와 배포 워크플로는 고치지 않는다. 폴더에 `index.html` 이 있으면 빌드·배포에 들어간다.
