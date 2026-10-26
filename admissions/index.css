@@ -1,0 +1,4 @@
+@import "../shared/site.css";
+
+/* 이 쪽만 훑는다. 아래 폴더의 인쇄물은 자기 tailwind.css 가 맡는다 */
+@source "./index.html";
