@@ -4,6 +4,8 @@
 
 body {
     font-family: 'Noto Sans KR', sans-serif;
+    /* 없는 굵기를 흉내 내지 않는다 — 흉내 낸 굵은 글씨는 인쇄에서 옆 글자를 덮는다 */
+    font-synthesis: none;
     margin: 0;
     padding: 0;
     background: #c8c8c8;

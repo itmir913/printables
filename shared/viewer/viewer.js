@@ -9,6 +9,7 @@
  *   - 왼쪽: 상위 페이지로 돌아가기 · 목차 · 자료 이름
  *   - 가운데: 지금 면 / 전체 면
  *   - 오른쪽: 확대·축소 · 단일/두 페이지 · 표지 페이지 별도 표시 · 인쇄
+ *     (인쇄 단추와 Ctrl+P 는 면에 쓰인 글꼴을 다 받은 뒤에 인쇄 창을 연다. 브라우저 메뉴의 인쇄는 기다리지 않는다)
  *
  * 하지 않는 일 — 면의 크기·생김새·면 번호는 자료가 정한다. 뷰어는 늘어놓기만 한다.
  * 그래서 면을 나중에 붙이는 자료(원고를 불러 조립하는 자료)는 면을 다 붙인 뒤에 부른다.
@@ -34,6 +35,32 @@ function load() {
 function save(s) {
   try { localStorage.setItem(STORE, JSON.stringify(s)); } catch { /* 저장 못 해도 화면은 그대로 */ }
 }
+
+/* 인쇄 전에 면에 쓰인 글꼴·굵기를 모두 받아 둔다. 받지 않은 굵기가 남은 채 PDF 로 저장하면
+   그 글자는 다른 글꼴로 찍힌다. 화면에 아직 그리지 않은 면의 글자까지 미리 받는다. */
+async function printWhenFontsReady(btn) {
+  if (btn) btn.disabled = true;
+  try {
+    const text = document.body.innerText;
+    const looks = new Set();
+    for (const n of document.querySelectorAll('.page, .page *')) {
+      const s = getComputedStyle(n);
+      looks.add(`${s.fontStyle} ${s.fontWeight} 16px ${s.fontFamily}`);
+    }
+    await Promise.allSettled([...looks].map((f) => document.fonts.load(f, text)));
+    await document.fonts.ready;
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+  window.print();
+}
+/* Ctrl+P(⌘P)도 같은 길로 보낸다. 브라우저 메뉴의 인쇄는 가로챌 수 없다 */
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'p') {
+    e.preventDefault();
+    printWhenFontsReady();
+  }
+});
 
 function el(tag, attrs = {}, ...kids) {
   const e = document.createElement(tag);
@@ -112,7 +139,7 @@ export function mountViewer(o = {}) {
     el('div', { class: 'vw-sep' }),
     el('div', { class: 'vw-grp vw-viewopt' }, el('div', { class: 'vw-seg', role: 'group', 'aria-label': '페이지 보기' }, btnOne, btnTwo), coverLab),
     el('div', { class: 'vw-sep' }),
-    el('button', { type: 'button', on: { click: () => window.print() } }, '인쇄'));
+    el('button', { type: 'button', on: { click: (e) => printWhenFontsReady(e.currentTarget) } }, '인쇄'));
 
   const toc = el('nav', { class: 'vw-toc no-print', id: 'vw-toc', 'aria-label': '목차', hidden: true });
   document.body.prepend(bar, toc);

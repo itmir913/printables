@@ -19,7 +19,7 @@
 /* 글꼴(Pretendard)은 tailwind.css 가 불러온다. 이 파일은 그 안의 한 층이다. */
 
 :root{
-  --font: "Pretendard Variable", Pretendard,
+  --font: Pretendard,
           "Noto Sans KR", "맑은 고딕", "Malgun Gothic", sans-serif;
 
   /* ── 무채색만 ── */

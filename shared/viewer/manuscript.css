@@ -3,7 +3,7 @@
  * 이미 자기 .page 양식이 있는 자료는 이 파일을 열지 않는다.
  * 흑백 인쇄 기준이다. 색으로 정보를 나누지 않고, 본문은 12pt 아래로 내리지 않는다.
  */
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css");
+@import "../fonts/pretendard.css";
 
 @page{ size:A4 portrait; margin:0; }
 
@@ -15,7 +15,7 @@ body{ margin:0; }
   width:210mm; height:297mm; overflow:hidden;
   padding:16mm 18mm 18mm;
   background:#fff; color:#111;
-  font:12pt/1.6 "Pretendard Variable", Pretendard, "Noto Sans KR", sans-serif;
+  font:12pt/1.6 Pretendard, "Noto Sans KR", sans-serif;
   word-break:keep-all; overflow-wrap:break-word;
   break-after:page;
 }

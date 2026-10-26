@@ -5,9 +5,9 @@ export default {
     extend: {
       /* sans 와 mono 를 같은 글꼴로 둔다. 고정폭이 끼어들 자리가 없다. */
       fontFamily: {
-        sans: ['Pretendard Variable','Pretendard','Noto Sans KR',
+        sans: ['Pretendard','Noto Sans KR',
                '맑은 고딕','Malgun Gothic','sans-serif'],
-        mono: ['Pretendard Variable','Pretendard','Noto Sans KR',
+        mono: ['Pretendard','Noto Sans KR',
                '맑은 고딕','Malgun Gothic','sans-serif']
       },
       /* 무채색만. style.css 의 :root 변수를 그대로 옮긴 것이다. */

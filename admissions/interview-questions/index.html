@@ -70,6 +70,11 @@ import 전공별 from './문제은행/03_전공별.md?raw';
 import 교과개념 from './문제은행/04_교과개념.md?raw';
 import 교육과정개념 from './문제은행/05_교육과정개념.md?raw';
 
+/* 조판기는 단 높이를 재며 문항을 나눈다. 글꼴을 다 받기 전에 재면 다른 글꼴로 재어 면이 달라진다 */
+await Promise.allSettled(['400', '700', '800'].map(function (w) {
+  return document.fonts.load(w + ' 16px Pretendard', [유형별, 학생부시사, 전공별, 교과개념, 교육과정개념].join(''));
+}));
+
 (function () {
   var BOOKS = [
     { md: 유형별, title: '공통 문항', part: '공통', path: '공통 유형' },

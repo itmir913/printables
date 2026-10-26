@@ -93,6 +93,15 @@ gh workflow run "Deploy to GitHub Pages"
 - **바로가기 쪽**은 `shared/landing.css`(→ `site.css`) 하나를 여는 Tailwind 4 표준 구성이다.
 - 진입점마다 `source(none)` + `@source` 로 자기 쪽만 훑는다. 다른 쪽의 클래스가 섞이지 않는다.
 
+## 글꼴
+
+- **가변 글꼴과 CDN 글꼴을 쓰지 않는다.** 크롬이 가변 글꼴의 굵은 글씨를 PDF 에 넣으면 출판소에서
+  굵은 글씨가 겹쳐 찍혔다. 굵기마다 따로 된 정적 글꼴을 npm 패키지로 묶어 `dist/` 에 함께 낸다.
+- Pretendard 는 `shared/fonts/pretendard.css` 하나를 연다. 글꼴 목록에 `"Pretendard Variable"` 을 적지 않는다.
+- `font-synthesis: none` — 없는 굵기를 브라우저가 흉내 내지 못하게 한다.
+- 인쇄는 뷰어의 인쇄 단추나 Ctrl+P 로 한다. 둘 다 글꼴을 다 받은 뒤 인쇄 창을 연다.
+  조판을 스스로 하는 자료(문제 은행)는 조판 전에 글꼴을 기다린다.
+
 ## 커밋
 
 `.githooks/commit-msg` 가 생성 도구 서명 줄(Co-Authored-By 등)을 지운다. 클론한 뒤 한 번:

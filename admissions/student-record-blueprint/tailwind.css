@@ -8,8 +8,13 @@
    이 학습지는 Tailwind 유틸리티를 한 개도 쓰지 않는다. Tailwind 가 하는 일은
    Preflight 뿐이다 — 그 가운데 html{line-height:1.5} 가 네 면의 줄 수를 정한다. */
 
-/* 글꼴. 바깥 @import 는 다른 규칙보다 앞에 와야 한다 */
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap");
+/* 글꼴 — 굵기별 정적 Noto Sans KR 을 저장소 안에서 묶어 낸다. 전에 쓰던 Google Fonts 와
+   같은 네 굵기다. 가변 글꼴은 PDF 인쇄에서 굵은 글씨가 겹쳐 찍혀 쓰지 않는다.
+   @import 는 다른 규칙보다 앞에 온다 */
+@import "@fontsource/noto-sans-kr/300.css";
+@import "@fontsource/noto-sans-kr/400.css";
+@import "@fontsource/noto-sans-kr/500.css";
+@import "@fontsource/noto-sans-kr/700.css";
 
 @import "tailwindcss/theme.css";
 
