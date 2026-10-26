@@ -95,10 +95,14 @@
         ul.appendChild(li);
         if (col.scrollHeight > col.clientHeight) {
           ul.removeChild(li);
-          if (!ul.children.length && ul.parentNode) ul.parentNode.removeChild(ul);
+          /* 첫 문항부터 넘치면 소제목만 단 끝에 홀로 남는다. 소제목도 함께 다음 단으로 옮긴다
+             (목차 표시가 소제목에 달려 있으므로 그대로 따라간다) */
+          var alone = !ul.children.length;
+          if (alone && ul.parentNode) ul.parentNode.removeChild(ul);
+          if (alone && h.parentNode) h.parentNode.removeChild(h);
           nextCol(title);
-          var cont = el('h4', 'sh2 qh cont', g.name + ' <span class="qn">이어서</span>');
-          col.appendChild(cont);
+          col.appendChild(alone ? h :
+            el('h4', 'sh2 qh cont', g.name + ' <span class="qn">이어서</span>'));
           ul = el('ul', 'qlist');
           col.appendChild(ul);
           ul.appendChild(li);
