@@ -76,6 +76,8 @@ const card = (item, href, span, alone, solo, n) => {
 /* 섹션 하나: 재단선 안에, 모노 표시 + 큰 제목 + 한두 문장 [+ 분야 쪽으로 가는 링크] + 카드 격자 */
 const section = ({ id, title, line, tone, more }, cards, i) => {
     const n = cards.length, spans = layout(n);
+    /* 판형은 자료마다 다를 수 있다. 섹션 머리에는 들어 있는 판형을 모아 적는다 */
+    const paper = [...new Set(cards.map(c => c.item.paper || "A4"))].join(" · ");
     return `
     <section id="${id}" aria-labelledby="${id}-h" class="relative isolate overflow-hidden border-t ${RULE_SOFT} px-4 pb-28 pt-24 ${TONES[tone] || TONES.plum} sm:px-[clamp(20px,5.5vw,88px)] sm:pb-[clamp(120px,16vh,200px)] sm:pt-[clamp(110px,15vh,170px)]">
         ${MARKS}
@@ -83,7 +85,7 @@ const section = ({ id, title, line, tone, more }, cards, i) => {
             <div class="${META} mb-5 flex items-center gap-3 opacity-55">
                 <span>§ ${String(i + 1).padStart(2, "0")}</span>
                 <span aria-hidden="true" class="h-px flex-1 bg-current opacity-30"></span>
-                <span>${n} sheet${n === 1 ? "" : "s"} · A4</span>
+                <span>${n} sheet${n === 1 ? "" : "s"} · ${paper}</span>
             </div>
             <div class="flex flex-col items-start gap-6 md:flex-row md:items-end md:justify-between">
                 <h2 id="${id}-h" class="text-[clamp(48px,14vw,76px)] font-extrabold leading-[.9] tracking-[-.05em] sm:text-[clamp(52px,8vw,104px)]">${title}</h2>

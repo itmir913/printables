@@ -1,0 +1,21 @@
+/* 이 학습지가 여는 스타일시트. Tailwind 와 style.css 를 여기서 묶는다.
+
+   **층(layer)을 쓰지 않는다.** 순서는 style.css → Preflight → 유틸리티다.
+   전에 쓰던 Tailwind CDN 은 style.css 뒤에 층 없는 <style> 을 붙였고, 면 배치는
+   그 규칙 위에서 맞춰져 있다. `@import "tailwindcss"` 를 그대로 쓰면 Preflight 가
+   층 안에 들어가고 층 밖의 style.css 가 전부 이겨 면이 달라진다.
+
+   이 학습지는 Tailwind 유틸리티를 한 개도 쓰지 않는다. Tailwind 가 하는 일은
+   Preflight 뿐이다 — 그 가운데 html{line-height:1.5} 가 네 면의 줄 수를 정한다. */
+
+/* 글꼴. 바깥 @import 는 다른 규칙보다 앞에 와야 한다 */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap");
+
+@import "tailwindcss/theme.css";
+
+@import "./style.css";
+@import "tailwindcss/preflight.css";
+
+/* source(none): 저장소 전체가 아니라 이 폴더만 훑는다 */
+@import "tailwindcss/utilities.css" source(none);
+@source "./";
