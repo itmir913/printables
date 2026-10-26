@@ -31,7 +31,7 @@ export const CATEGORIES = [
             {
                 id: 'interview',
                 title: '면접',
-                line: '2027학년도 수시 면접 지도를 위한 가이드북과 문제 은행입니다. 링크로 열고, Chrome으로 인쇄합니다.',
+                line: '수시 면접 지도를 위한 교사용 가이드북과 문제 은행입니다. 유형별 준비부터 실전 연습까지, 필요한 면만 골라 인쇄합니다.',
                 items: [
                     {
                         path: 'interview-guide/',
