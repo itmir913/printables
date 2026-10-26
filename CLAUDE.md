@@ -21,7 +21,7 @@ printables/
 │  ├─ art.js                   카드 그림
 │  ├─ landing.js               허브·분야 쪽을 그리는 양식
 │  ├─ landing.css · site.css   Tailwind 진입점과 팔레트
-└─ vite.config.js              폴더의 index.html 을 저절로 찾는다. 고치지 않는다
+└─ vite.config.js              폴더의 index.html 을 저절로 찾고, 모든 쪽에 파비콘을 넣는다. 고치지 않는다
 ```
 
 - **허브 → 분야 → 자료의 3단까지만** 둔다. 자료를 다른 분야로 옮기면 이미 나눠 준 링크가
