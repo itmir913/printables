@@ -22,6 +22,7 @@
 import './viewer.css';
 
 const ZOOMS = [0.5, 0.67, 0.75, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
+const ZOOM_MIN = 0.25, ZOOM_MAX = 4;   // 휠로 움직일 수 있는 끝
 const STORE = 'printables.viewer';
 // 이보다 좁은 창(휴대폰)에서는 두 페이지 보기를 쓰지 않는다 — viewer.css 의 같은 값과 맞춘다
 const NARROW = '(max-width: 720px)';
@@ -86,6 +87,9 @@ export function mountViewer(o = {}) {
   const zoomSel = el('select', { 'aria-label': '배율' },
     el('option', { value: 'fit' }, '폭 맞춤'),
     ...ZOOMS.map((z) => el('option', { value: String(z) }, Math.round(z * 100) + '%')));
+  // 휠로 맞춘 배율은 목록에 없다. 그 값을 보여 줄 칸 하나를 두고, 쓸 때만 꺼낸다
+  const zoomFree = el('option', { value: '', hidden: true });
+  zoomSel.append(zoomFree);
   const btnOne = el('button', { type: 'button', 'aria-pressed': 'false' }, '단일 페이지');
   const btnTwo = el('button', { type: 'button', 'aria-pressed': 'false' }, '두 페이지');
   const coverIn = el('input', { type: 'checkbox' });
@@ -131,6 +135,9 @@ export function mountViewer(o = {}) {
   function applyZoom(keep = true) {
     const target = keep ? st.current : null;
     document.documentElement.style.setProperty('--vw-zoom', String(zoomValue()));
+    const listed = st.zoom === 'fit' || ZOOMS.includes(st.zoom);
+    zoomFree.hidden = listed;
+    if (!listed) { zoomFree.value = String(st.zoom); zoomFree.textContent = Math.round(st.zoom * 100) + '%'; }
     zoomSel.value = String(st.zoom);
     if (target) goTo(target, 'instant');
   }
@@ -144,6 +151,32 @@ export function mountViewer(o = {}) {
     applyZoom();
   });
   window.addEventListener('resize', () => { if (st.zoom === 'fit') applyZoom(false); });
+  /* Ctrl(⌘) + 휠 · 트랙패드 오므리기 — 브라우저 확대 대신 면을 확대한다.
+     휠 한 칸(deltaY≈100)이 약 18%, 트랙패드는 작은 값이 잇달아 와서 부드럽게 움직인다.
+     커서 밑의 자리가 그대로 커서 밑에 남도록 스크롤을 맞춘다. */
+  let wheelDelta = 0, wheelAt = null, wheelQueued = false;
+  window.addEventListener('wheel', (e) => {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    e.preventDefault();
+    wheelDelta += e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY;   // 줄 단위로 오는 브라우저도 있다
+    wheelAt = { x: e.clientX, y: e.clientY };
+    if (wheelQueued) return;
+    wheelQueued = true;
+    requestAnimationFrame(() => {
+      wheelQueued = false;
+      const z0 = zoomValue();
+      const z1 = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z0 * Math.exp(-wheelDelta * 0.002)));
+      wheelDelta = 0;
+      if (Math.abs(z1 - z0) < 0.001) return;
+      const r0 = root.getBoundingClientRect();
+      const lx = (wheelAt.x - r0.left) / z0, ly = (wheelAt.y - r0.top) / z0;
+      st.zoom = Math.round(z1 * 1000) / 1000;
+      applyZoom(false);
+      const r1 = root.getBoundingClientRect();
+      window.scrollBy(r1.left + lx * st.zoom - wheelAt.x, r1.top + ly * st.zoom - wheelAt.y);
+    });
+  }, { passive: false });
+
   window.addEventListener('keydown', (e) => {
     if (!(e.ctrlKey || e.metaKey)) return;
     if (e.key === '=' || e.key === '+') { e.preventDefault(); step(1); }
