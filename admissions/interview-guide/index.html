@@ -7,56 +7,9 @@
 
 <!-- Tailwind = 면 안에서의 배치·간격.  style.css = 인쇄 규격과 부품.
      HTML 에 style="..." 속성을 쓰지 않는다. 치수는 아래 토큰이나
-     임의값 유틸리티(min-h-[32mm], w-[34%])로 적는다. -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      /* sans 와 mono 를 같은 글꼴로 둔다. 고정폭이 끼어들 자리가 없다. */
-      fontFamily: {
-        sans: ['Pretendard Variable','Pretendard','Noto Sans KR',
-               '맑은 고딕','Malgun Gothic','sans-serif'],
-        mono: ['Pretendard Variable','Pretendard','Noto Sans KR',
-               '맑은 고딕','Malgun Gothic','sans-serif']
-      },
-      /* 무채색만. style.css 의 :root 변수를 그대로 옮긴 것이다. */
-      colors: {
-        ink:'#000', bodytx:'#1f1f1f', subtx:'#444', mute:'#6b6b6b', faint:'#949494',
-        line:'#cfcfcf', line2:'#8f8f8f', fill:'#f2f2f2', fill2:'#e6e6e6'
-      },
-      /* 종이 위의 길이는 mm 로만 센다.  p-4mm  gap-5mm  mt-1mm */
-      spacing: {
-        '1mm':'1mm','1.5mm':'1.5mm','2mm':'2mm','2.5mm':'2.5mm','3mm':'3mm',
-        '3.5mm':'3.5mm','4mm':'4mm','4.5mm':'4.5mm','5mm':'5mm','6mm':'6mm',
-        '7mm':'7mm','8mm':'8mm','9mm':'9mm','10mm':'10mm','12mm':'12mm',
-        '14mm':'14mm','16mm':'16mm','17mm':'17mm','18mm':'18mm','22mm':'22mm'
-      },
-      /* 글자 크기는 pt 로만 센다.  text-10.5pt */
-      fontSize: {
-        '8.5pt':'8.5pt','9pt':'9pt','9.5pt':'9.5pt','10pt':'10pt','10.5pt':'10.5pt',
-        '11pt':'11pt','11.5pt':'11.5pt','12pt':'12pt','12.5pt':'12.5pt',
-        '13pt':'13pt','13.5pt':'13.5pt','14pt':'14pt','15.5pt':'15.5pt',
-        '16.5pt':'16.5pt','18pt':'18pt','21pt':'21pt','30pt':'30pt','34pt':'34pt'
-      },
-      width:  { a4:'210mm' },
-      height: { a4:'297mm' },
-      borderWidth: {
-        hair:'1px', thin:'0.35mm', mid:'0.5mm', bold:'0.6mm',
-        heavy:'0.9mm', bar:'1.4mm', bar2:'1.6mm', dbl:'2.2mm'
-      }
-    }
-  }
-}
-</script>
-
-<script>
-/* 스타일도 원고와 같이 그때그때 새로 읽는다. 고치고 새로 고치면 그 자리에서
-   보여야 한다. 브라우저가 옛 style.css 를 쥐고 있으면 고쳐 놓고도 화면이
-   그대로여서, 고친 것을 다시 고치며 한참을 헤매게 된다.
-   아래 fetch 가 ?v= 를 붙이는 것과 같은 이유다. */
-document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
-</script>
+     임의값 유틸리티(min-h-[32mm], w-[34%])로 적는다.
+     토큰은 tailwind.config.js 에, 묶는 순서는 tailwind.css 에 있다. -->
+<link rel="stylesheet" href="./tailwind.css">
 </head>
 <body data-book="면접 지도 가이드북">
 
@@ -70,43 +23,35 @@ document.write('<link rel="stylesheet" href="style.css?v=' + Date.now() + '">');
 </div>
 
 <div id="doc"></div>
-<script>
-/* 원고/ 를 순서대로 불러 조립한다.
-   fetch 라서 localhost 로 열어야 한다. file:// 로 열면 조각을 못 읽는다.
-   배부본은 공개 주소의 이 파일이다. */
-(function () {
-  var PARTS = [
-    '원고/00_표지차례.html',
-    '원고/01_공통.html',
-    '원고/02_서류기반.html',
-    '원고/03_인적성.html',
-    '원고/04_특수.html',
-    '원고/05_제시문.html',
-    '원고/06_예시.html',
-    '원고/07_부록.html'
-  ];
-  Promise.all(PARTS.map(function (p) {
-    return fetch(p + '?v=' + Date.now()).then(function (r) {
-      if (!r.ok) throw new Error(p + ' — ' + r.status);
-      return r.text();
-    });
-  })).then(function (chunks) {
-    document.getElementById('doc').innerHTML = chunks.join('\n');
-    window.paginate();
-  }).catch(function (e) {
-    document.getElementById('doc').innerHTML =
-      '<div class="page"><div class="body"><h3 class="sh">조각을 불러오지 못했습니다</h3>' +
-      '<p>' + e.message + '</p><p>이 파일은 <b>localhost</b> 로 열어야 합니다. ' +
-      'file:// 로 열었다면 개발 서버로 다시 여십시오.</p></div></div>';
-  });
-})();
-</script>
+<script type="module">
+/* 원고/ 를 순서대로 붙여 조립한다.
+   개발 서버(npm run dev)에서는 원고를 고치면 그 자리에서 다시 그려지고,
+   빌드(npm run build)하면 원고가 이 페이지 안에 들어가 dist/ 로 나간다. */
+import './공통.js';
 
-<script>
-/* 스크립트도 마찬가지다. 스타일시트와 같은 이유로 ?v= 를 붙인다. */
-['공통.js'].forEach(function (f) {
-  document.write('<scr' + 'ipt src="' + f + '?v=' + Date.now() + '"><\/scr' + 'ipt>');
-});
+const 원고 = import.meta.glob('./원고/*.html', { query: '?raw', import: 'default', eager: true });
+
+const PARTS = [
+  '00_표지차례.html',
+  '01_공통.html',
+  '02_서류기반.html',
+  '03_인적성.html',
+  '04_특수.html',
+  '05_제시문.html',
+  '06_예시.html',
+  '07_부록.html'
+];
+
+const missing = PARTS.filter((f) => !(('./원고/' + f) in 원고));
+const doc = document.getElementById('doc');
+if (missing.length) {
+  doc.innerHTML =
+    '<div class="page"><div class="body"><h3 class="sh">조각을 찾지 못했습니다</h3>' +
+    '<p>원고/' + missing.join(', 원고/') + '</p></div></div>';
+} else {
+  doc.innerHTML = PARTS.map((f) => 원고['./원고/' + f]).join('\n');
+  window.paginate();
+}
 </script>
 </body>
 </html>

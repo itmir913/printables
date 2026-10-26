@@ -11,12 +11,12 @@
               머리말·꼬리말, 상자 세 종류, 표, 학생 기입칸.
               인터넷이 끊겨도 이 파일만으로 A4 골격은 살아 있어야 한다.
    Tailwind = 면 안에서의 배치와 간격(유틸리티). 단위 토큰은
-              면접지도연수.html 의 tailwind.config 에 정의해 두었다.
+              tailwind.config.js 에 정의해 두었다.
    HTML 의 style="..." 속성은 쓰지 않는다. 한 번만 쓰는 치수도
    유틸리티로 적는다.  예) style="min-width:40mm" → min-w-[40mm]
    ============================================================ */
 
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css");
+/* 글꼴(Pretendard)은 tailwind.css 가 불러온다. 이 파일은 그 안의 한 층이다. */
 
 :root{
   --font: "Pretendard Variable", Pretendard,

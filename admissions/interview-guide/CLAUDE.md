@@ -40,6 +40,8 @@ admissions/
 │  │  └─ 07_부록.html      학생 배부용 활동지
 │  │
 │  │  ── 거들개 ──────────────────────────────────────────
+│  ├─ tailwind.css          두 책이 여는 스타일시트. Tailwind 와 style.css 를 묶는 순서가 여기 있다
+│  ├─ tailwind.config.js    Tailwind 토큰 (mm · pt · 무채색)
 │  ├─ style.css             흑백 인쇄용 A4 세로 공통 스타일 (두 책이 함께 쓴다)
 │  ├─ 공통.js                두 책이 함께 쓴다 — 면 번호 매기기, 인쇄 범위 전환
 │  └─ 자료/                 원자료 (git 제외)
@@ -52,13 +54,15 @@ admissions/
    └─ 문제은행조판.js         단이 넘치면 다음 면으로 넘긴다
 ```
 
-**`style.css` 와 `공통.js` 는 가이드북 폴더에 하나만 있다.** 문제은행은
+**`tailwind.css` · `tailwind.config.js` · `style.css` · `공통.js` 는 가이드북 폴더에 하나만 있다.** 문제은행은
 `../interview-guide/` 에서 읽어 간다. 사본을 두면 반드시 갈라진다.
 
-**빌드는 필요 없다.** 두 `index.html` 을 `localhost` 로 열면 그 자리에서
-조립·조판된다. 고치고 새로 고침만 하면 된다. 문제은행이 옆 폴더를 읽으므로
-**저장소 루트에서** 서버를 띄운다.
-(`fetch` 를 쓰므로 `file://` 로는 열리지 않는다.)
+**저장소 루트에서 `npm run dev`** 를 띄우고 `http://localhost:5173/printables/admissions/interview-guide/`
+로 연다. 원고·`.md`·CSS 를 고치면 그 자리에서 다시 그려진다.
+`npm run build` 하면 원고가 페이지 안에 들어간 `dist/` 가 나오고, 배포는 그것을 올린다.
+
+**Tailwind 는 v3 CDN 시절의 면을 그대로 지킨다.** 순서와 예외는 `tailwind.css` 주석에 있다.
+그 순서를 바꾸면 면이 달라진다. 바꾼 뒤에는 이전 커밋과 면을 대조한다.
 
 **배부본은 공개 주소의 `index.html` 그 자체다.** 단일 파일로 구워 내는 빌드는 두지 않는다.
 학생에게는 링크를 주고, 종이가 필요하면 그 페이지를 Chrome 으로 인쇄한다.
@@ -191,7 +195,7 @@ admissions/
 
 ## 서식 규칙
 
-- **Tailwind** = 면 안에서의 배치·간격. 토큰은 `index.html` 의 `tailwind.config` 에 있다. 문제은행 `index.html` 에도 같은 설정이 있으니 함께 고친다.
+- **Tailwind** = 면 안에서의 배치·간격. 토큰은 `tailwind.config.js` 에 있고 두 책이 함께 쓴다.
 - **style.css** = 인쇄 규격과 부품(면 크기·머리말·상자·표·학생 기입칸).
 - HTML 에 `style="..."` 속성을 쓰지 않는다. 한 번만 쓰는 치수도 `min-w-[40mm]` 처럼 유틸리티로.
 - 서식 클래스를 새로 만들기 전에 `style.css` 에 이미 있는지 확인한다.
@@ -257,6 +261,6 @@ STAR·OREO 는 **③ 전개한다를 무엇으로 채우는가**로 내려 둔�
 
 ### 실측하는 법
 
-`index.html` 을 localhost 에서 열고, 각 `.page > .body` 의
+`npm run dev` 로 `index.html` 을 열고, 각 `.page > .body` 의
 `scrollHeight - clientHeight` 를 측정한다. 0보다 크면 그 면은 넘친 것이다.
 반대로 여백이 230px 넘게 남으면 그 면은 성긴 것이다. 둘 다 0이어야 한다.
