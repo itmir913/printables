@@ -101,13 +101,25 @@
 }
 .vw-toc[hidden]{ display:none; }
 .vw-toc ol{ list-style:none; margin:0; padding:0; }
+.vw-toc .vw-row{ display:flex; align-items:stretch; }
+.vw-toc .vw-l2 > .vw-row{ padding-left:16px; color:#444; }
+.vw-toc .vw-l3 > .vw-row{ padding-left:32px; color:#555; font-size:13px; }
+.vw-toc li.vw-has:not(.is-open) > ol{ display:none; }
+/* 접기 단추 — 아래 항목이 없는 줄에서도 자리는 남겨 글머리를 맞춘다 */
+.vw-toc .vw-tg{
+  flex:none; width:22px; margin-left:6px; padding:0; border:0; background:none;
+  color:#777; cursor:pointer; visibility:hidden;
+}
+.vw-toc .vw-has > .vw-row > .vw-tg{ visibility:visible; }
+.vw-toc .vw-tg::before{ content:"▸"; }
+.vw-toc .is-open > .vw-row > .vw-tg::before{ content:"▾"; }
+.vw-toc .vw-tg:hover{ color:#111; }
 .vw-toc a{
-  display:flex; gap:12px; align-items:baseline;
-  padding:7px 14px; color:inherit; text-decoration:none;
+  flex:1; min-width:0; display:flex; gap:12px; align-items:baseline;
+  padding:7px 14px 7px 4px; color:inherit; text-decoration:none;
 }
 .vw-toc a:hover, .vw-toc a:focus-visible{ background:#f0f0f0; outline:none; }
 .vw-toc a.is-current{ font-weight:700; }
-.vw-toc .vw-lv2{ padding-left:30px; color:#444; }
 .vw-toc .vw-t{ flex:1; min-width:0; }
 .vw-toc .vw-p{ color:#777; font-variant-numeric:tabular-nums; }
 .vw-toc .vw-empty{ padding:10px 14px; color:#777; }

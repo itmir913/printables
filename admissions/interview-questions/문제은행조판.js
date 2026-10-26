@@ -61,15 +61,32 @@
       }
     }
 
+    var parent = null;
     book.groups.forEach(function (g, gi) {
       var title = book.title;
       if (gi === 0) newPage(title, false);
       /* 유형이 바뀌면 소제목을 놓는다 */
       var h = el('h4', 'sh2 qh', g.name +
         ' <span class="qn">' + g.items.length + '</span>');
-      /* 목차에는 묶음마다 한 줄, 한 단 들여 넣는다 */
-      h.setAttribute('data-toc', g.name);
-      h.setAttribute('data-toc-level', '2');
+      /* 목차: 묶음은 2단.  「세특·탐구 — 실험 설계」처럼 나뉜 묶음은
+         앞말을 2단으로 한 번만 두고, 뒷말을 그 아래 3단으로 넣는다 */
+      var cut = g.name.indexOf(' — ');
+      if (cut < 0) {
+        parent = null;
+        h.setAttribute('data-toc', g.name);
+        h.setAttribute('data-toc-level', '2');
+      } else {
+        var up = g.name.slice(0, cut);
+        if (up !== parent) {
+          parent = up;
+          h.setAttribute('data-toc', up);
+          h.setAttribute('data-toc-level', '2');
+        }
+        /* 3단 표시는 안쪽 빈 span 에 단다 — 문서 순서로 앞말 다음에 온다 */
+        h.insertBefore(el('span', null), h.firstChild);
+        h.firstChild.setAttribute('data-toc', g.name.slice(cut + 3));
+        h.firstChild.setAttribute('data-toc-level', '3');
+      }
       put(h, title);
       var ul = el('ul', 'qlist');
       put(ul, title);

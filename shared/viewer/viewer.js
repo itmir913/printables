@@ -15,7 +15,8 @@
  *
  * 목차는 [data-toc] 가 있으면 그것을, 없으면 면마다 처음 나오는 h1·h2 를 쓴다.
  *   <h2 data-toc>제1부 공통</h2>           ← 글자를 그대로 쓴다
- *   <div data-toc="부록" data-toc-level="2">  ← 이름과 들여쓰기를 따로 준다
+ *   <div data-toc="부록" data-toc-level="2">  ← 이름과 들여쓰기를 따로 준다 (1~3단)
+ * 아래 단이 있는 항목은 목차에서 접고 펼 수 있다. 1단은 펼쳐 두고 그 아래는 접어 둔다.
  * 자료에 이미 차례 면이 있으면 그 링크를 그대로 쓴다 — mountViewer({ tocFrom: '.toc a[href^="#"]' }).
  * 링크의 href="#id" 가 가리키는 면으로 가고, class="t2" 나 data-toc-level="2" 면 한 단 들인다.
  */
@@ -266,17 +267,46 @@ export function mountViewer(o = {}) {
       if (lv.size === 1) tocItems.forEach((t) => { t.level = 1; });
     }
     tocItems = tocItems.filter((t) => t.page > 0);
-    toc.replaceChildren(tocItems.length
-      ? el('ol', {}, ...tocItems.map((t) => el('li', {},
-          el('a', { href: '#', class: t.level > 1 ? 'vw-lv2' : null, on: { click: (e) => { e.preventDefault(); closeToc(); goTo(t.page); } } },
-            el('span', { class: 'vw-t' }, t.text), el('span', { class: 'vw-p' }, String(t.page))))))
-      : el('div', { class: 'vw-empty' }, '목차가 없습니다'));
+    toc.replaceChildren(tocItems.length ? tocTree(tocItems) : el('div', { class: 'vw-empty' }, '목차가 없습니다'));
+  }
+  /* 목차를 단계(1~3)대로 겹쳐 넣는다. 아래 항목이 있는 줄에는 접기 단추를 단다.
+     1단은 펼쳐 두고, 그 아래는 접어 둔다 — 지금 면이 든 갈래는 markToc 이 펼친다. */
+  function setOpen(li, open) {
+    li.classList.toggle('is-open', open);
+    const tg = li.querySelector(':scope > .vw-row > .vw-tg');
+    tg.setAttribute('aria-expanded', String(open));
+    tg.setAttribute('aria-label', open ? '접기' : '펼치기');
+  }
+  function tocTree(items) {
+    const top = el('ol');
+    const stack = [{ level: 0, ol: top, li: null }];
+    for (const t of items) {
+      const level = Math.min(Math.max(t.level, 1), 3);
+      while (stack[stack.length - 1].level >= level) stack.pop();
+      const parent = stack[stack.length - 1];
+      if (!parent.ol) {
+        parent.ol = el('ol');
+        parent.li.append(parent.ol);
+        parent.li.classList.add('vw-has');
+        setOpen(parent.li, parent.level === 1);
+      }
+      const li = el('li', { class: 'vw-l' + level });
+      const tg = el('button', { type: 'button', class: 'vw-tg', tabindex: '-1', 'aria-expanded': 'false',
+        on: { click: (e) => { e.stopPropagation(); setOpen(li, !li.classList.contains('is-open')); } } });
+      const a = el('a', { href: '#', on: { click: (e) => { e.preventDefault(); closeToc(); goTo(t.page); } } },
+        el('span', { class: 'vw-t' }, t.text), el('span', { class: 'vw-p' }, String(t.page)));
+      li.append(el('div', { class: 'vw-row' }, tg, a));
+      parent.ol.append(li);
+      stack.push({ level, ol: null, li });
+    }
+    return top;
   }
   function markToc() {
     const links = toc.querySelectorAll('a');
     let cur = -1;
     tocItems.forEach((t, i) => { if (t.page <= st.current) cur = i; });
     links.forEach((a, i) => a.classList.toggle('is-current', i === cur));
+    for (let li = links[cur]?.closest('li')?.parentElement.closest('li'); li; li = li.parentElement.closest('li')) setOpen(li, true);
   }
   function openToc() {
     toc.hidden = false; tocBtn.setAttribute('aria-expanded', 'true');
