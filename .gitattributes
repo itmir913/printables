@@ -1,0 +1,41 @@
+# 줄바꿈은 저장소와 작업트리 모두 LF로 통일한다.
+# Windows에서 작업하더라도 CRLF로 되돌리지 않는다.
+* text=auto eol=lf
+
+# 확실히 텍스트인 것들
+*.html   text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.mjs    text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.txt    text eol=lf
+*.xml    text eol=lf
+*.svg    text eol=lf
+*.csv    text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+.gitignore      text eol=lf
+.gitattributes  text eol=lf
+
+# 바이너리 — 손대지 않는다
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.pdf  binary
+*.docx binary
+*.dotx binary
+*.xlsx binary
+*.pptx binary
+*.potx binary
+*.hwp  binary
+*.hwpx binary
+*.zip  binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.otf  binary
+.githooks/** text eol=lf
