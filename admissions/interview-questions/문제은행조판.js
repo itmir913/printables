@@ -23,7 +23,7 @@
       var head = el('div', 'head');
       head.innerHTML =
         '<div class="ttl"><span class="no"><span class="part">' + book.part + '</span>' +
-        (cont ? '이어서' : '문항') + '</span><h2>' + title + '</h2></div>' +
+        (cont ? '이어서' : '문항') + '</span><h2' + (cont ? '' : ' data-toc') + '>' + title + '</h2></div>' +
         '<span class="path">' + book.path + '</span>';
       var body = el('div', 'body');
       cols = el('div', 'qcols');
@@ -67,6 +67,9 @@
       /* 유형이 바뀌면 소제목을 놓는다 */
       var h = el('h4', 'sh2 qh', g.name +
         ' <span class="qn">' + g.items.length + '</span>');
+      /* 목차에는 묶음마다 한 줄, 한 단 들여 넣는다 */
+      h.setAttribute('data-toc', g.name);
+      h.setAttribute('data-toc-level', '2');
       put(h, title);
       var ul = el('ul', 'qlist');
       put(ul, title);
