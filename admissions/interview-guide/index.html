@@ -44,7 +44,7 @@ if (missing.length) {
   doc.innerHTML = PARTS.map((f) => 원고['./원고/' + f]).join('\n');
   window.paginate();
 }
-mountViewer({ title: '면접 지도 가이드북', tocFrom: '.toc a[data-to]' });
+mountViewer({ title: '면접 지도 가이드북', tocFrom: '.toc h3, .toc a[data-to]:not([hidden])' });
 </script>
 </body>
 </html>

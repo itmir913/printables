@@ -20,6 +20,9 @@
  * 아래 단이 있는 항목은 목차에서 접고 펼 수 있다. 1단은 펼쳐 두고 그 아래는 접어 둔다.
  * 자료에 이미 차례 면이 있으면 그 링크를 그대로 쓴다 — mountViewer({ tocFrom: '.toc a[href^="#"]' }).
  * 링크의 href="#id" 가 가리키는 면으로 가고, class="t2" 나 data-toc-level="2" 면 한 단 들인다.
+ * 선택자에 머리글(h3 등)을 함께 적으면 그것이 묶음이 되고 링크가 그 아래로 한 단 내려간다 —
+ *   tocFrom: '.toc h3, .toc a[data-to]'  →  제1부 / 1. 면접의 지형 / 면접장이 화면일 때
+ * 묶음 머리글은 자기 면이 없으므로 아래 첫 항목의 면으로 간다.
  */
 import './viewer.css';
 
@@ -263,17 +266,22 @@ export function mountViewer(o = {}) {
     const pageOf = (node) => ps.indexOf(node.closest('.page')) + 1;
     const marked = [...root.querySelectorAll('[data-toc]')];
     if (o.tocFrom) {
-      tocItems = [...root.querySelectorAll(o.tocFrom)].map((a) => {
-        const id = decodeURIComponent((a.getAttribute('href') || '').slice(1));
+      const nodes = [...root.querySelectorAll(o.tocFrom)];
+      const isLink = (n) => n.matches('a[href^="#"]');
+      const hasGrp = nodes.some((n) => !isLink(n));   // 묶음 머리글이 섞여 있으면 링크를 한 단 내린다
+      tocItems = nodes.map((n) => {
+        const label = n.cloneNode(true);
+        label.querySelectorAll('.pg, .dotfill').forEach((x) => x.remove());
+        const text = label.textContent.replace(/\s+/g, ' ').trim();
+        if (!isLink(n)) return { text, level: 1, page: 0, grp: true };
+        const id = decodeURIComponent(n.getAttribute('href').slice(1));
         const target = id && document.getElementById(id);
-        const label = a.cloneNode(true);
-        label.querySelectorAll('.pg, .dotfill').forEach((n) => n.remove());
-        return {
-          text: label.textContent.replace(/\s+/g, ' ').trim(),
-          level: a.classList.contains('t2') || a.getAttribute('data-toc-level') === '2' ? 2 : 1,
-          page: target ? pageOf(target) : 0
-        };
+        const sub = n.classList.contains('t2') || n.getAttribute('data-toc-level') === '2';
+        return { text, level: (hasGrp ? 2 : 1) + (sub ? 1 : 0), page: target ? pageOf(target) : 0 };
       });
+      // 묶음 머리글은 자기 면이 없다. 아래 첫 항목의 면으로 보낸다
+      for (let i = tocItems.length - 1; i >= 0; i -= 1)
+        if (tocItems[i].grp) tocItems[i].page = tocItems[i + 1] ? tocItems[i + 1].page : 0;
     } else if (marked.length) {
       tocItems = marked.map((n) => ({
         text: n.getAttribute('data-toc') || n.textContent.trim(),
